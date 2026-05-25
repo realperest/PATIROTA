@@ -1,0 +1,407 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-main: hsl(222, 47%, 11%);
+    --bg-card: hsla(223, 47%, 18%, 0.7);
+    --bg-card-hover: hsla(223, 47%, 24%, 0.85);
+    --accent: hsl(158, 82%, 46%);
+    --accent-hover: hsl(158, 82%, 36%);
+    --accent-danger: hsl(354, 70%, 54%);
+    --accent-warning: hsl(43, 96%, 56%);
+    --text-primary: hsl(210, 40%, 98%);
+    --text-secondary: hsl(215, 20%, 75%);
+    --border-color: hsla(217, 32%, 18%, 0.85);
+    --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --shadow-premium: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --glass-blur: blur(12px);
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
+    background-image: 
+        radial-gradient(at 10% 10%, hsla(223, 47%, 18%, 0.4) 0px, transparent 50%),
+        radial-gradient(at 90% 90%, hsla(158, 82%, 46%, 0.08) 0px, transparent 50%);
+    background-attachment: fixed;
+}
+
+.nicegui-content {
+    height: 100vh !important;
+    max-height: 100vh !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box;
+}
+
+.page-root {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+    max-height: 100vh;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    box-sizing: border-box;
+    gap: 0.5rem;
+    overflow: hidden;
+}
+
+.premium-header {
+    flex-shrink: 0;
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-premium);
+    border-radius: 16px;
+    padding: 0.65rem 1.25rem;
+    margin-bottom: 0;
+    transition: all 0.3s ease;
+}
+
+.premium-card {
+    background: var(--bg-card);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-premium);
+    border-radius: 16px;
+    padding: 1.8rem;
+    transition: border-color 0.3s ease;
+}
+
+.map-panel {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+.map-panel:hover {
+    background: var(--bg-card);
+    transform: none;
+    border-color: var(--border-color);
+}
+
+.map-panel .q-card {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.map-panel .q-card__section {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.title-gradient {
+    background: linear-gradient(135deg, var(--text-primary) 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.btn-premium {
+    background: linear-gradient(135deg, var(--accent) 0%, hsl(165, 85%, 40%) 100%);
+    color: var(--bg-main) !important;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(26, 210, 137, 0.2);
+}
+
+.btn-premium:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 20px rgba(26, 210, 137, 0.45);
+}
+
+/* Numarali barinak pinleri (harita) */
+.patirota-shelter-marker {
+    background: transparent !important;
+    border: none !important;
+}
+
+.patirota-shelter-marker-inner {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 26px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+    font-family: var(--font-sans);
+    cursor: pointer;
+}
+
+/* Google Maps */
+.google-map-host,
+.patirota-google-map-inner {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100%;
+    border: none;
+    border-radius: 0;
+}
+
+/* Form alanlari */
+.q-field__native, .q-field__prefix, .q-field__suffix, .q-field__input {
+    color: var(--text-primary) !important;
+}
+
+.q-field__label {
+    color: var(--text-secondary) !important;
+}
+
+.q-field--outlined .q-field__control {
+    border-radius: 12px !important;
+    border-color: var(--border-color) !important;
+    background: rgba(15, 23, 42, 0.4) !important;
+}
+
+.q-field--outlined .q-field__control:hover {
+    border-color: var(--accent) !important;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.status-kaza {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--accent-danger);
+    border: 1px solid var(--accent-danger);
+}
+
+.status-hasta {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--accent-warning);
+    border: 1px solid var(--accent-warning);
+}
+
+.status-yavru {
+    background: rgba(59, 130, 246, 0.15);
+    color: #3b82f6;
+    border: 1px solid #3b82f6;
+}
+
+.status-siddet {
+    background: rgba(220, 38, 38, 0.2);
+    color: #ef4444;
+    border: 1px solid #ef4444;
+    animation: pulse 2s infinite;
+}
+
+.status-normal {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* Harita + sag panel (yan yana, asagi kirilmaz) */
+.map-panel .shelter-layout,
+.shelter-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: stretch;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+.map-pane {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: calc(100% - 300px) !important;
+    min-height: 0;
+    height: 100%;
+    width: auto;
+    position: relative;
+    overflow: hidden;
+    background: #cfd8dc;
+}
+
+/* Harita ustu kucuk bilgi seridi (tum haritayi kaplamaz) */
+.map-location-hint {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    max-width: 92%;
+    padding: 10px 16px;
+    border-radius: 12px;
+    text-align: center;
+    pointer-events: none;
+    background: rgba(11, 15, 25, 0.88);
+    border: 1px solid rgba(26, 210, 137, 0.4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+
+.map-location-hint-action {
+    display: block;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #1ad289;
+}
+
+.map-pane > div,
+.map-pane .google-map-host {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100%;
+}
+
+.map-panel .shelter-sidebar,
+.shelter-sidebar {
+    flex: 0 0 300px !important;
+    width: 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+    height: 100% !important;
+    min-height: 0;
+    background: rgba(15, 23, 42, 0.98);
+    color: var(--text-primary);
+    border-left: 1px solid var(--border-color);
+    display: flex !important;
+    flex-direction: column;
+    padding: 1rem 1.25rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 5;
+    visibility: visible !important;
+}
+
+@media (max-width: 900px) {
+    .shelter-layout {
+        flex-direction: column !important;
+    }
+    .map-pane {
+        flex: 1 1 55%;
+        width: 100%;
+        min-height: 200px;
+    }
+    .shelter-sidebar {
+        flex: 0 0 45%;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+.place-mode-toggle {
+    width: 100%;
+}
+
+.shelter-sidebar-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 0.5rem;
+}
+
+.shelter-sidebar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.shelter-sidebar-item {
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    background: rgba(30, 41, 59, 0.4);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+.shelter-sidebar-item:hover {
+    background: rgba(30, 41, 59, 0.75);
+    border-color: hsla(158, 82%, 46%, 0.3);
+    transform: translateX(4px);
+}
+
+.shelter-sidebar-item-selected {
+    background: rgba(30, 41, 59, 0.75) !important;
+}
+
+.shelter-sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.shelter-sidebar-name {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+
+.shelter-sidebar-distance {
+    font-size: 0.8rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.shelter-sidebar-details {
+    margin-top: 0.4rem;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
