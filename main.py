@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0015"
+APP_ASSET_VERSION = "260526.0016"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -946,9 +946,11 @@ async def index_page():
                                                 ui.label(sh["address"]).classes("text-[11px] leading-tight").style(text_style)
                                                 
                                         # Sağ tarafta ROTA OLUŞTUR butonu
-                                        ui.button("ROTA OLUŞTUR").classes(
+                                        btn = ui.button("ROTA OLUŞTUR").classes(
                                             "text-[10px] font-bold p-1 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shrink-0 shadow-sm ml-2 h-7"
-                                        ).props("dense flat no-caps").on("click", create_route, modifiers=["stop"])
+                                        ).props("dense flat no-caps")
+                                        btn.on("click", create_route)
+                                        btn.on("click", js_handler="arguments[0].stopPropagation()")
 
             async def update_map(
                 fit_map: bool = False,
