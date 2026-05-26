@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0010"
+APP_ASSET_VERSION = "260526.0012"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -894,8 +894,10 @@ async def index_page():
                                     session_state["selected_shelter_id"] = None
                                     await update_map(fit_map=True)
                                 else:
-                                    session_state["selected_shelter_id"] = s_id
-                                    await update_sidebar()
+                                    await activate_shelter_route(
+                                        s_id,
+                                        open_navigation=False,
+                                    )
 
                             # Kartın tamamına tıklama özelliği ekliyoruz
                             item_card.on("click", select_shelter)
@@ -913,13 +915,8 @@ async def index_page():
                             # Detaylar sadece seciliyse (accordion acik) gosterilecek
                             if is_selected:
                                 with ui.element("div").classes(
-                                    "shelter-sidebar-details mt-2 pointer-events-auto"
+                                    "shelter-sidebar-details mt-2 pointer-events-auto w-full"
                                 ).style(text_style):
-                                    if sh["phone"]:
-                                        ui.label(f"Tel: {sh['phone']}").style(text_style)
-                                    if sh["address"]:
-                                        ui.label(sh["address"]).style(text_style)
-                                    
                                     async def create_route(e, s_id=sh["id"]):
                                         # 1. Haritada rotayı çiz ve zoom yap
                                         await activate_shelter_route(s_id, open_navigation=False)
@@ -940,9 +937,18 @@ async def index_page():
                                         }
                                         ui.run_javascript(f"patirotaOpenRoute({json.dumps(sh_payload)}, {json.dumps(nav_payload)});")
 
-                                    ui.button("ROTA OLUŞTUR").classes(
-                                        "text-[12px] font-bold mt-3 inline-block p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-center w-full shadow-md"
-                                    ).props("dense flat no-caps").on("click.stop", create_route)
+                                    with ui.row().classes("w-full justify-between items-end flex-nowrap gap-1"):
+                                        # Sol tarafta telefon ve adres alt alta (kompakt)
+                                        with ui.column().classes("gap-0.5 min-w-0 flex-1"):
+                                            if sh["phone"]:
+                                                ui.label(f"Tel: {sh['phone']}").classes("text-[11px] leading-tight").style(text_style)
+                                            if sh["address"]:
+                                                ui.label(sh["address"]).classes("text-[11px] leading-tight").style(text_style)
+                                                
+                                        # Sağ tarafta ROTA OLUŞTUR butonu
+                                        ui.button("ROTA OLUŞTUR").classes(
+                                            "text-[10px] font-bold p-1 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shrink-0 shadow-sm ml-2 h-7"
+                                        ).props("dense flat no-caps").on("click.stop", create_route)
 
             async def update_map(
                 fit_map: bool = False,
