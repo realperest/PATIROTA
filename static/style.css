@@ -427,6 +427,11 @@ body {
     height: 100% !important;
 }
 
+.patirota-device-mobile .google-map-host,
+.patirota-device-mobile .patirota-google-map-inner {
+    touch-action: none;
+}
+
 .patirota-device-mobile .drawer-backdrop {
     display: block;
     position: fixed;

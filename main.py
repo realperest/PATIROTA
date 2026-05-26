@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0002"
+APP_ASSET_VERSION = "260526.0003"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"

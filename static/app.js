@@ -561,6 +561,13 @@ function patirotaScheduleMapRefresh(map) {
     setTimeout(() => patirotaRefreshMapView(map), 400);
 }
 
+function patirotaMapGestureHandling() {
+    if (patirotaIsMobileLayout()) {
+        return "greedy";
+    }
+    return "auto";
+}
+
 async function initPatirotaGoogleMap(hostId, options) {
     await loadGoogleMapsApi();
     const host = getElement(hostId);
@@ -583,6 +590,7 @@ async function initPatirotaGoogleMap(hostId, options) {
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: true,
+        gestureHandling: patirotaMapGestureHandling(),
     });
     if (!patirotaMapRegistry[hostId]) {
         map.addListener("click", (e) => {
@@ -996,6 +1004,14 @@ function patirotaApplyDeviceClasses() {
     document.documentElement.classList.add("patirota-device-" + mode);
     document.body.classList.toggle("patirota-device-mobile", mode === "mobile");
     document.body.classList.toggle("patirota-device-desktop", mode === "desktop");
+    Object.keys(patirotaMapRegistry).forEach((hostId) => {
+        const state = patirotaMapRegistry[hostId];
+        if (state && state.map) {
+            state.map.setOptions({
+                gestureHandling: patirotaMapGestureHandling(),
+            });
+        }
+    });
 }
 
 function patirotaInitMobileShell() {
