@@ -30,5 +30,26 @@ Bu oturumda, kullanıcının talepleri doğrultusunda yan paneldeki barınak/vet
 2. **[main.py](file:///d:/KODLAMALAR/GITHUB/PATIROTA/main.py)**: Rota yardımcı JS fonksiyonu (`patirotaOpenRouteFromSidebar`) enjekte edildi, `js_handler` ve Python `create_route` senkron/asenkron koordinasyonu sağlandı, versiyon kutusu kaldırıldı.
 3. **[konusmalar/konusma02.md](file:///d:/KODLAMALAR/GITHUB/PATIROTA/konusmalar/konusma02.md)**: Bu log dosyası güncellendi.
 
-## 4. Takip Edilecekler / Sonraki Adımlar
-- Değişiklikler tarayıcıda test edilecek, mobil cihazlarda yerel navigasyon açılışı doğrulanacaktır.
+## 4. Kırılganlık ve Hataların Kök Neden Analizi (26.05.2026 Geliştirmesi)
+- **Hata Tanımı:** Arayüzün tamamen çökmesi (boş ekran) ve butonların işlevsiz kalması.
+- **Kök Nedenler:**
+  1. `js_handler` içerisine eklenen `event.stopPropagation()` ifadesi, Vue.js event sistemi içinde `event` değişkeninin global/yerel bağlamda tanımsız olması sebebiyle tarayıcıda `ReferenceError` fırlatıyor ve tüm Vue çalışma zamanını kilitliyordu.
+  2. Bir önceki kod güncellemesi (`multi_replace_file_content`) sırasında asenkron `create_route` fonksiyonu yanlış bölünmüş, `sh_payload` sözlüğü yarım kalmış ve mükerrer fonksiyon tanımlaması sebebiyle Python tarafında `SyntaxError` oluşmuştur.
+- **Düzeltmeler:**
+  1. `js_cmd` içerisindeki `event.stopPropagation()` ifadesi tamamen kaldırıldı. Yapısal olarak Rota Oluştur butonu `shelter-sidebar-header` elemanının bir alt elemanı (child) değil, yan elemanı (sibling) olduğu için bubbling zaten kartı kapatan click olayını tetiklememektedir. JS seviyesinde hata üreten bu kurguya gerek olmadığı görülmüştür.
+  2. `main.py` içerisindeki `create_route` asenkron fonksiyonu tek bir asenkron fonksiyon olarak temiz ve Python sözdizimine uygun şekilde yeniden yazıldı.
+## 5. Nihai Kök Neden Analizi ve Cozumler (260526.0021)
+
+### Sorun 1: Rota acilinca PatiRota sayfasi bos kaliyor
+- **Kok Neden:** `patirotaOpenRoute` fonksiyonunda mobil cihazlarda `window.location.href = webDirUrl` kullaniliyordu. Bu, mevcut PatiRota sekmesini Google Maps'e yonlendiriyordu. Sayfa geri donerken NiceGUI WebSocket baglantisi kopmus oluyordu.
+- **Cozum (app.js):** Butun `window.location.href` kullanimlari `window.open(..., "_blank")` ile degistirildi. Hem native app intent URL hem web fallback her zaman YENİ sekmede acilir. PatiRota sekmesi hic degismez.
+
+### Sorun 2: ROTA PLANLA butonuna tiklaninca beklenmedik yeniden cizim
+- **Kok Neden:** Butona `create_route` Python async handler ve `js_handler` birlikte baglanmisti. Python handler tetiklenince `activate_shelter_route -> update_map -> update_sidebar` zincirleme cagrisinin tetiklenmesi hem gereksiz hem de yanlis etkiler uretiyordu.
+- **Cozum (main.py):** Python handler tamamen kaldirildi. Buton artik sadece `js_handler=js_cmd` ile `window.patirotaOpenRouteFromSidebar(id)` cagiriyor. Navigasyon tamamen JS tarafinda cozuluyor.
+
+### Degistirilen dosyalar
+- `static/app.js` - `patirotaOpenRoute`: window.location.href -> window.open
+- `main.py` - ROTA PLANLA butonu: Python handler kaldirildi, sadece js_handler
+- `APP_ASSET_VERSION = "260526.0021"`
+

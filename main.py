@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0018"
+APP_ASSET_VERSION = "260526.0023"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -877,9 +877,8 @@ async def index_page():
                         route_color = route_color_for_index(idx)
                         text_style = f"color:{route_color};"
                         formatted_distance = f"{sh['distance']:.2f}".replace(".", ",")
-                        gmaps_url = google_maps_directions_url(sh)
                         is_selected = sh["id"] == session_state["selected_shelter_id"]
-                        item_classes = "shelter-sidebar-item cursor-pointer transition-all duration-300"
+                        item_classes = "shelter-sidebar-item transition-all duration-300"
                         if is_selected:
                             item_classes += " shelter-sidebar-item-selected"
                         border_width = "6px" if is_selected else "4px"
@@ -887,82 +886,36 @@ async def index_page():
                             f"border-left:{border_width} solid {route_color};"
                             f"box-shadow:0 0 12px {route_color}33;"
                         )
+                        sh_id = sh["id"]
 
-                        with ui.element("div").classes(item_classes).style(item_style) as item_card:
-                            async def select_shelter(e, s_id=sh["id"]):
-                                if session_state["selected_shelter_id"] == s_id:
+                        with ui.element("div").classes(item_classes).style(item_style):
+                            # Sadece baslik satirina tiklama: accordion ac/kapat + harita zoom
+                            async def _header_click(e, _id=sh_id, _sel=is_selected):
+                                if _sel:
                                     session_state["selected_shelter_id"] = None
                                     await update_map(fit_map=True)
                                 else:
-                                    await activate_shelter_route(
-                                        s_id,
-                                        open_navigation=False,
-                                    )
+                                    await activate_shelter_route(_id, open_navigation=False)
 
-                            # Kartın tamamına tıklama özelliği ekliyoruz
-                            item_card.on("click", select_shelter)
+                            with ui.element("div").classes("shelter-sidebar-header cursor-pointer").on("click", _header_click):
+                                ui.label(f"{idx + 1}. {sh['name']}").classes("shelter-sidebar-name").style(f"{text_style}font-weight:700;")
+                                ui.label(f"{formatted_distance} KM").classes("shelter-sidebar-distance").style(f"{text_style}font-weight:800;")
 
-                            with ui.element("div").classes("shelter-sidebar-header pointer-events-none"):
-                                title_label = ui.label(
-                                    f"{idx + 1}. {sh['name']}"
-                                ).classes("shelter-sidebar-name").style(
-                                    f"{text_style}font-weight:700;"
-                                )
-                                ui.label(f"{formatted_distance} KM").classes(
-                                    "shelter-sidebar-distance"
-                                ).style(f"{text_style}font-weight:800;")
-
-                            # Detaylar sadece seciliyse (accordion acik) gosterilecek
+                            # Detaylar: sadece secili kartta gorunur
                             if is_selected:
-                                with ui.element("div").classes(
-                                    "shelter-sidebar-details mt-2 pointer-events-auto w-full"
-                                ).style(text_style):
-                                    async def create_route(e, s_id=sh["id"]):
-                                        # 1. Haritada rotayı çiz ve zoom yap
-                                        await activate_shelter_route(s_id, open_navigation=False)
-                                        # 2. İstemci tarafında navigasyonu tetikle
-                                        sh_payload = {
-                                            "id": sh["id"],
-                                            "lat": sh["latitude"],
-                                            "lng": sh["longitude"],
-                                            "name": sh["name"] or "",
-                                            "address": sh["address"] or "",
-                                            "phone": sh["phone"] or "",
-                                            "distanceKm": formatted_distance
-                                        }
-                                        nav_payload = {
-                                            "locationReady": session_state["location_ready"],
-                                            "userLat": session_state["user_lat"],
-                                            "userLon": session_state["user_lon"]
-                                        }
-                                        ui.run_javascript(f"patirotaOpenRoute({json.dumps(sh_payload)}, {json.dumps(nav_payload)});")
-
+                                with ui.element("div").classes("shelter-sidebar-details mt-2 w-full"):
                                     with ui.row().classes("w-full justify-between items-end flex-nowrap gap-1"):
-                                        # Sol tarafta telefon ve adres alt alta (kompakt)
                                         with ui.column().classes("gap-0.5 min-w-0 flex-1"):
-                                            if sh["phone"]:
+                                            if sh.get("phone"):
                                                 ui.label(f"Tel: {sh['phone']}").classes("text-[11px] leading-tight").style(text_style)
-                                            if sh["address"]:
+                                            if sh.get("address"):
                                                 ui.label(sh["address"]).classes("text-[11px] leading-tight").style(text_style)
-                                                
-                                    async def create_route(e, s_id=sh["id"]):
-                                        # Haritada rotayı çiz ve zoom yap
-                                        await activate_shelter_route(s_id, open_navigation=False)
 
-                                    js_cmd = f"event.stopPropagation(); window.patirotaOpenRouteFromSidebar({sh['id']});"
-
-                                    with ui.row().classes("w-full justify-between items-end flex-nowrap gap-1"):
-                                        # Sol tarafta telefon ve adres alt alta (kompakt)
-                                        with ui.column().classes("gap-0.5 min-w-0 flex-1"):
-                                            if sh["phone"]:
-                                                ui.label(f"Tel: {sh['phone']}").classes("text-[11px] leading-tight").style(text_style)
-                                            if sh["address"]:
-                                                ui.label(sh["address"]).classes("text-[11px] leading-tight").style(text_style)
-                                                
-                                        # Sağ tarafta ROTA OLUŞTUR butonu
-                                        ui.button("ROTA OLUŞTUR").classes(
-                                            "text-[10px] font-bold p-1 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shrink-0 shadow-sm ml-2 h-7"
-                                        ).props("dense flat no-caps").on("click", create_route, js_handler=js_cmd)
+                                        # ROTA PLANLA: onclick HTML prop, NiceGUI/Vue event sistemi bypass
+                                        # event.stopPropagation() kullanilmiyor - Vue'da 'event' tanimsiz, ReferenceError verir
+                                        ui.button("ROTA PLANLA").classes(
+                                            "text-[10px] font-bold px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shrink-0 shadow-sm ml-2 h-7"
+                                        ).props(f'dense flat no-caps onclick="window.patirotaOpenRouteFromSidebar({sh_id})"')
 
             async def update_map(
                 fit_map: bool = False,
