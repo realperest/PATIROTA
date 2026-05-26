@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0008"
+APP_ASSET_VERSION = "260526.0010"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -894,10 +894,8 @@ async def index_page():
                                     session_state["selected_shelter_id"] = None
                                     await update_map(fit_map=True)
                                 else:
-                                    await activate_shelter_route(
-                                        s_id,
-                                        open_navigation=False,
-                                    )
+                                    session_state["selected_shelter_id"] = s_id
+                                    await update_sidebar()
 
                             # Kartın tamamına tıklama özelliği ekliyoruz
                             item_card.on("click", select_shelter)
@@ -921,13 +919,30 @@ async def index_page():
                                         ui.label(f"Tel: {sh['phone']}").style(text_style)
                                     if sh["address"]:
                                         ui.label(sh["address"]).style(text_style)
-                                    ui.link(
-                                        "Google Maps ile Git",
-                                        gmaps_url,
-                                        new_tab=True,
-                                    ).classes(
-                                        "text-[12px] font-bold mt-2 hover:underline inline-block p-1 bg-slate-800 rounded"
-                                    ).style(text_style)
+                                    
+                                    async def create_route(e, s_id=sh["id"]):
+                                        # 1. Haritada rotayı çiz ve zoom yap
+                                        await activate_shelter_route(s_id, open_navigation=False)
+                                        # 2. İstemci tarafında navigasyonu tetikle
+                                        sh_payload = {
+                                            "id": sh["id"],
+                                            "lat": sh["latitude"],
+                                            "lng": sh["longitude"],
+                                            "name": sh["name"] or "",
+                                            "address": sh["address"] or "",
+                                            "phone": sh["phone"] or "",
+                                            "distanceKm": formatted_distance
+                                        }
+                                        nav_payload = {
+                                            "locationReady": session_state["location_ready"],
+                                            "userLat": session_state["user_lat"],
+                                            "userLon": session_state["user_lon"]
+                                        }
+                                        ui.run_javascript(f"patirotaOpenRoute({json.dumps(sh_payload)}, {json.dumps(nav_payload)});")
+
+                                    ui.button("ROTA OLUŞTUR").classes(
+                                        "text-[12px] font-bold mt-3 inline-block p-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-center w-full shadow-md"
+                                    ).props("dense flat no-caps").on("click.stop", create_route)
 
             async def update_map(
                 fit_map: bool = False,
@@ -979,44 +994,6 @@ async def index_page():
         async def refresh_elements():
             update_legal_view()
             await update_map()
-
-        # Kural 5: Sayfa tabanlı otomatik versiyonlama kutusu
-        ui.add_body_html(f"""
-        <div id="patirota-version-info" style="position: fixed; bottom: 8px; right: 8px; z-index: 9999; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 10px; font-size: 10px; text-align: right; font-family: monospace; pointer-events: none; line-height: 1.35; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
-            <!-- Versiyon listesi JS ile doldurulacak -->
-        </div>
-        <script>
-            (function() {{
-                const currentVer = "260526.0008";
-                const versionHistory = [
-                    "260526.0008",
-                    "260526.0007",
-                    "260526.0006"
-                ];
-                const viewedVersions = JSON.parse(localStorage.getItem("viewed_versions") || "[]");
-                const isNew = !viewedVersions.includes(currentVer);
-                
-                if (isNew) {{
-                    viewedVersions.push(currentVer);
-                    localStorage.setItem("viewed_versions", JSON.stringify(viewedVersions));
-                }}
-                
-                const container = document.getElementById("patirota-version-info");
-                if (container) {{
-                    let html = "";
-                    versionHistory.forEach((v, idx) => {{
-                        const isLatest = idx === 0;
-                        let colorStyle = "color: #94a3b8;";
-                        if (isLatest) {{
-                            colorStyle = isNew ? "color: #10b981; font-weight: bold;" : "color: #f8fafc; font-weight: bold;";
-                        }}
-                        html += `<div style="${{colorStyle}}">${{isLatest ? '<b>' : ''}}v${{v}}${{isLatest ? '</b>' : ''}}</div>`;
-                    }});
-                    container.innerHTML = html;
-                }}
-            }})();
-        </script>
-        """)
 
     await update_map()
 
