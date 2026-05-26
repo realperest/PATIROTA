@@ -954,3 +954,162 @@ function getBrowserLocation() {
         })();
     });
 }
+
+function patirotaRefreshAllMaps() {
+    Object.keys(patirotaMapRegistry).forEach((hostId) => {
+        const state = patirotaMapRegistry[hostId];
+        if (state && state.map) {
+            patirotaRefreshMapView(state.map);
+        }
+    });
+}
+
+function patirotaGetDeviceMode() {
+    const fromServer = document.documentElement.dataset.patirotaDevice;
+    if (fromServer === "mobile" || fromServer === "desktop") {
+        return fromServer;
+    }
+    const ua = (navigator.userAgent || "").toLowerCase();
+    const mobileUa = /iphone|ipod|ipad|android|mobile|webos|blackberry|iemobile|opera mini|crios|fxios|silk|kindle/i.test(
+        ua
+    );
+    if (mobileUa) {
+        return "mobile";
+    }
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        return "mobile";
+    }
+    return "desktop";
+}
+
+function patirotaIsMobileLayout() {
+    return patirotaGetDeviceMode() === "mobile";
+}
+
+function patirotaApplyDeviceClasses() {
+    const mode = patirotaGetDeviceMode();
+    document.documentElement.dataset.patirotaDevice = mode;
+    document.documentElement.classList.remove(
+        "patirota-device-mobile",
+        "patirota-device-desktop"
+    );
+    document.documentElement.classList.add("patirota-device-" + mode);
+    document.body.classList.toggle("patirota-device-mobile", mode === "mobile");
+    document.body.classList.toggle("patirota-device-desktop", mode === "desktop");
+}
+
+function patirotaInitMobileShell() {
+    patirotaApplyDeviceClasses();
+    if (!patirotaIsMobileLayout()) {
+        return;
+    }
+
+    const shell = document.querySelector(".mobile-map-shell");
+    if (!shell || shell.dataset.patirotaMobileBound === "1") {
+        return;
+    }
+    shell.dataset.patirotaMobileBound = "1";
+
+    const backdrop = shell.querySelector(".drawer-backdrop");
+
+    const setDrawerOpen = (open) => {
+        if (!patirotaIsMobileLayout()) {
+            shell.classList.remove("drawer-open");
+            document.body.classList.remove("patirota-drawer-open");
+            if (backdrop) {
+                backdrop.classList.remove("visible");
+            }
+            return;
+        }
+        shell.classList.toggle("drawer-open", open);
+        document.body.classList.toggle("patirota-drawer-open", open);
+        if (backdrop) {
+            backdrop.classList.toggle("visible", open);
+        }
+        if (open) {
+            setTimeout(patirotaRefreshAllMaps, 320);
+        } else {
+            setTimeout(patirotaRefreshAllMaps, 80);
+        }
+    };
+
+    window.patirotaOpenPlacesDrawer = () => setDrawerOpen(true);
+    window.patirotaClosePlacesDrawer = () => setDrawerOpen(false);
+    window.patirotaTogglePlacesDrawer = () =>
+        setDrawerOpen(!shell.classList.contains("drawer-open"));
+
+    if (backdrop) {
+        backdrop.addEventListener("click", () => setDrawerOpen(false));
+    }
+
+    document.querySelectorAll(".mobile-drawer-toggle").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.patirotaTogglePlacesDrawer();
+        });
+    });
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    document.addEventListener(
+        "touchstart",
+        (e) => {
+            if (!patirotaIsMobileLayout() || !e.touches || !e.touches.length) {
+                return;
+            }
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        },
+        { passive: true }
+    );
+
+    document.addEventListener(
+        "touchend",
+        (e) => {
+            if (
+                !patirotaIsMobileLayout() ||
+                !e.changedTouches ||
+                !e.changedTouches.length
+            ) {
+                return;
+            }
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            const w = window.innerWidth;
+
+            if (Math.abs(deltaY) > Math.abs(deltaX)) {
+                return;
+            }
+
+            const isOpen = shell.classList.contains("drawer-open");
+
+            if (!isOpen && touchStartX > w - 28 && deltaX < -42) {
+                setDrawerOpen(true);
+                return;
+            }
+
+            if (isOpen && deltaX > 42) {
+                setDrawerOpen(false);
+            }
+        },
+        { passive: true }
+    );
+
+}
+
+function patirotaTryInitMobileShell() {
+    patirotaApplyDeviceClasses();
+    patirotaInitMobileShell();
+    if (!document.querySelector(".mobile-map-shell")) {
+        setTimeout(patirotaTryInitMobileShell, 250);
+    }
+}
+
+if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", patirotaTryInitMobileShell);
+} else {
+    patirotaTryInitMobileShell();
+}

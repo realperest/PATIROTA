@@ -316,22 +316,206 @@ body {
     visibility: visible !important;
 }
 
-@media (max-width: 900px) {
-    .shelter-layout {
-        flex-direction: column !important;
+/* --- Header (mobil kompakt) --- */
+.header-bar {
+    width: 100%;
+}
+
+.patirota-device-desktop .header-tagline {
+    display: block;
+}
+
+.patirota-device-mobile .header-tagline {
+    display: none !important;
+}
+
+.header-icon-btn {
+    min-width: 36px !important;
+    min-height: 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    color: var(--text-primary) !important;
+}
+
+.drawer-mobile-top {
+    display: none;
+}
+
+.drawer-backdrop {
+    display: none;
+}
+
+.mobile-map-shell {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+}
+
+/* --- Masaustu: yan panel acik --- */
+.patirota-device-desktop .drawer-backdrop {
+    display: none !important;
+}
+
+.patirota-device-desktop .drawer-mobile-top {
+    display: none !important;
+}
+
+.patirota-device-desktop .mobile-drawer-toggle {
+    display: none !important;
+}
+
+.patirota-device-desktop .map-pane {
+    max-width: calc(100% - 300px) !important;
+}
+
+.patirota-device-desktop .shelter-sidebar {
+    position: relative !important;
+    transform: none !important;
+    width: 300px !important;
+    min-width: 300px !important;
+    max-width: 300px !important;
+    flex: 0 0 300px !important;
+    box-shadow: none;
+}
+
+/* --- Mobil: tam ekran harita + sag cekmece (UA tespiti) --- */
+.patirota-device-mobile .page-root {
+    padding: 0;
+    gap: 0;
+}
+
+.patirota-device-mobile .premium-header {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    padding: 0.35rem 0.5rem;
+    z-index: 1100;
+}
+
+.patirota-device-mobile .mobile-logo {
+    font-size: 1.15rem !important;
+    line-height: 1.2;
+}
+
+.patirota-device-mobile .map-panel {
+    border-radius: 0 !important;
+    border: none !important;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.patirota-device-mobile .map-panel .q-card {
+    border-radius: 0;
+}
+
+.patirota-device-mobile .mobile-map-shell,
+.patirota-device-mobile .shelter-layout {
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+}
+
+.patirota-device-mobile .map-pane {
+    flex: 1 1 auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+}
+
+.patirota-device-mobile .drawer-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1190;
+    background: rgba(2, 6, 23, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+.patirota-device-mobile .mobile-map-shell.drawer-open .drawer-backdrop {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.patirota-device-mobile .map-panel .shelter-sidebar,
+.patirota-device-mobile .shelter-sidebar {
+    position: fixed !important;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: auto !important;
+    width: min(78vw, 268px) !important;
+    min-width: 0 !important;
+    max-width: min(78vw, 268px) !important;
+    flex: none !important;
+    z-index: 1200;
+    padding: 0.65rem 0.75rem !important;
+    border-left: 1px solid var(--border-color);
+    border-top: none;
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.45);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    visibility: visible !important;
+}
+
+.patirota-device-mobile .mobile-map-shell.drawer-open .shelter-sidebar {
+    transform: translateX(0);
+}
+
+.patirota-device-mobile .drawer-mobile-top {
+    display: flex;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.patirota-device-mobile .drawer-close-btn {
+    min-width: 32px !important;
+    min-height: 32px !important;
+}
+
+.patirota-device-mobile .shelter-sidebar-title {
+    font-size: 0.78rem;
+    margin-bottom: 0.65rem;
+}
+
+.patirota-device-mobile .shelter-sidebar-item {
+    padding: 0.55rem 0.65rem;
+}
+
+.patirota-device-mobile .shelter-sidebar-name {
+    font-size: 0.72rem;
+}
+
+.patirota-device-mobile .shelter-sidebar-details {
+    font-size: 0.65rem;
+}
+
+.patirota-device-mobile .place-mode-toggle {
+    font-size: 0.65rem !important;
+}
+
+body.patirota-device-mobile.patirota-drawer-open {
+    overflow: hidden;
+}
+
+@media (min-width: 769px) and (max-width: 1100px) {
+    .patirota-device-desktop .map-panel .shelter-sidebar,
+    .patirota-device-desktop .shelter-sidebar {
+        flex: 0 0 260px !important;
+        width: 260px !important;
+        min-width: 260px !important;
+        max-width: 260px !important;
     }
-    .map-pane {
-        flex: 1 1 55%;
-        width: 100%;
-        min-height: 200px;
-    }
-    .shelter-sidebar {
-        flex: 0 0 45%;
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        border-left: none;
-        border-top: 1px solid var(--border-color);
+
+    .patirota-device-desktop .map-pane {
+        max-width: calc(100% - 260px) !important;
     }
 }
 

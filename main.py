@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260525.0067"
+APP_ASSET_VERSION = "260526.0002"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -58,6 +58,41 @@ LIST_MODE_OPTIONS = {
 }
 
 REFINE_LOCATION_MIN_KM = 3.0
+
+MOBILE_UA_MARKERS = (
+    "iphone",
+    "ipod",
+    "ipad",
+    "android",
+    "mobile",
+    "webos",
+    "blackberry",
+    "iemobile",
+    "opera mini",
+    "crios",
+    "fxios",
+    "silk/",
+    "kindle",
+)
+
+
+def detect_client_is_mobile() -> bool:
+    """Tarayici User-Agent ile mobil veya masaustu istemci tespiti."""
+    try:
+        client = ui.context.client
+        if client is None or getattr(client, "request", None) is None:
+            return False
+        ua = (client.request.headers.get("user-agent") or "").lower()
+        if not ua:
+            return False
+        return any(marker in ua for marker in MOBILE_UA_MARKERS)
+    except Exception as err:
+        logger.warning("Cihaz tespiti yapilamadi: %s", err)
+        return False
+
+
+def get_client_device_mode() -> str:
+    return "mobile" if detect_client_is_mobile() else "desktop"
 
 
 def is_valid_map_coordinate(lat: Optional[float], lon: Optional[float]) -> bool:
@@ -424,8 +459,20 @@ async def init_session_data():
 @ui.page('/')
 async def index_page():
     await init_session_data()
-    
+
+    device_mode = get_client_device_mode()
+    device_is_mobile = device_mode == "mobile"
+    logger.info("Istemci cihaz modu: %s", device_mode)
+
     # CSS ve JS Dosyalarini Kafaya Ekleme (Kural 7 - Isolation & Cache Busting)
+    ui.add_head_html(
+        '<meta name="viewport" content="width=device-width, initial-scale=1, '
+        'maximum-scale=1, viewport-fit=cover">'
+    )
+    ui.add_head_html(
+        f'<script>document.documentElement.dataset.patirotaDevice={json.dumps(device_mode)};'
+        f'document.documentElement.classList.add("patirota-device-{device_mode}");</script>'
+    )
     ui.add_head_html(f'<link rel="stylesheet" href="/static/style.css?v={APP_ASSET_VERSION}">')
     ui.add_head_html(f'<script src="/static/app.js?v={APP_ASSET_VERSION}"></script>')
     gmaps_key = os.environ.get("GOOGLE_MAPS_API_KEY", "").strip()
@@ -522,204 +569,238 @@ async def index_page():
         ui.button('Kapat', on_click=legal_dialog.close).classes('w-full bg-slate-800 hover:bg-slate-700 text-white rounded-lg mt-2')
 
     # --- ANA ARAYUZ (tam ekran dikey) ---
-    with ui.element('div').classes('page-root'):
+    page_classes = f'page-root patirota-device-{device_mode}'
+    with ui.element('div').classes(page_classes):
         
-        # 1. Minimal Header
-        with ui.element('div').classes('premium-header flex flex-col md:flex-row items-center justify-between gap-3'):
-            with ui.row().classes('items-center gap-3'):
-                ui.label('PatiRota').classes('text-2xl font-bold title-gradient m-0')
-                ui.label('En Yakın Barınaklar ve Rota Rehberi').classes('text-xs text-secondary hidden md:block')
-            
-            # Ana Kontroller
-            with ui.row().classes('items-center gap-2 w-full md:w-auto justify-center'):
+        def open_places_drawer() -> None:
+            ui.run_javascript(
+                "window.patirotaOpenPlacesDrawer && window.patirotaOpenPlacesDrawer();"
+            )
 
-                async def apply_location(
-                    u_lat: float,
-                    u_lon: float,
-                    accuracy: float,
-                    silent: bool = False,
-                    fit_map: bool = False,
-                    recenter_user: bool = False,
-                    source: str = "gps",
-                ) -> None:
-                    if not is_valid_map_coordinate(u_lat, u_lon):
-                        logger.warning(
-                            "Gecersiz konum reddedildi: lat=%s lon=%s", u_lat, u_lon
+        def close_places_drawer() -> None:
+            ui.run_javascript(
+                "window.patirotaClosePlacesDrawer && window.patirotaClosePlacesDrawer();"
+            )
+
+        map_update_lock = asyncio.Lock()
+        location_lock = asyncio.Lock()
+
+        async def apply_location(
+            u_lat: float,
+            u_lon: float,
+            accuracy: float,
+            silent: bool = False,
+            fit_map: bool = False,
+            recenter_user: bool = False,
+            source: str = "gps",
+        ) -> None:
+            if not is_valid_map_coordinate(u_lat, u_lon):
+                logger.warning(
+                    "Gecersiz konum reddedildi: lat=%s lon=%s", u_lat, u_lon
+                )
+                ui.notify(
+                    "Konum gecersiz. Konumumu Yenile ile tekrar deneyin.",
+                    type="warning",
+                )
+                return
+            session_state["user_lat"] = u_lat
+            session_state["user_lon"] = u_lon
+            session_state["location_ready"] = True
+            session_state["location_accuracy_m"] = accuracy
+            session_state["location_source"] = source
+            session_state["selected_shelter_id"] = None
+            session_state["info_balloon_shelter_id"] = None
+            session_state["info_balloon_phase"] = None
+
+            await load_nearest_for_active_mode(u_lat, u_lon, limit=5)
+
+            logger.info(
+                "Konum lat=%.6f lon=%.6f accuracy=%.1fm",
+                u_lat,
+                u_lon,
+                accuracy,
+            )
+            await update_map(
+                fit_map=fit_map,
+                recenter_user=recenter_user,
+                zoom_to_shelter_id=session_state["selected_shelter_id"],
+            )
+            if not silent:
+                ui.notify(
+                    f"Konum guncellendi (±{accuracy:.0f} m)",
+                    type="positive",
+                )
+
+        async def request_location(
+            force: bool = False,
+            refine_only: bool = False,
+        ) -> None:
+            async with location_lock:
+                if (
+                    not force
+                    and not refine_only
+                    and session_state.get("location_ready")
+                    and get_active_nearest_places()
+                ):
+                    return
+                client_id = getattr(ui.context.client, "id", "?")
+                logger.info("Konum istegi basladi (client=%s)", client_id)
+                try:
+                    coords: Optional[Dict[str, Any]] = None
+                    try:
+                        coords = await ui.run_javascript(
+                            LOCATION_JS, timeout=45.0
                         )
-                        ui.notify(
-                            "Konum gecersiz. Konumumu Yenile ile tekrar deneyin.",
-                            type="warning",
-                        )
-                        return
-                    session_state["user_lat"] = u_lat
-                    session_state["user_lon"] = u_lon
-                    session_state["location_ready"] = True
-                    session_state["location_accuracy_m"] = accuracy
-                    session_state["location_source"] = source
-                    session_state["selected_shelter_id"] = None
-                    session_state["info_balloon_shelter_id"] = None
-                    session_state["info_balloon_phase"] = None
+                        logger.info("Konum JS yaniti: %s", coords)
+                    except Exception as err:
+                        logger.error("Konum JS istegi hatasi: %s", err)
 
-                    await load_nearest_for_active_mode(u_lat, u_lon, limit=5)
-
-                    logger.info(
-                        "Konum lat=%.6f lon=%.6f accuracy=%.1fm",
-                        u_lat,
-                        u_lon,
-                        accuracy,
-                    )
-                    await update_map(
-                        fit_map=fit_map,
-                        recenter_user=recenter_user,
-                        zoom_to_shelter_id=session_state["selected_shelter_id"],
-                    )
-                    if not silent:
-                        ui.notify(
-                            f"Konum guncellendi (±{accuracy:.0f} m)",
-                            type="positive",
-                        )
-
-                async def request_location(
-                    force: bool = False,
-                    refine_only: bool = False,
-                ) -> None:
-                    async with location_lock:
-                        if (
-                            not force
-                            and not refine_only
-                            and session_state.get("location_ready")
-                            and get_active_nearest_places()
-                        ):
-                            return
-                        client_id = getattr(ui.context.client, "id", "?")
-                        logger.info("Konum istegi basladi (client=%s)", client_id)
-                        try:
-                            coords: Optional[Dict[str, Any]] = None
-                            try:
-                                coords = await ui.run_javascript(
-                                    LOCATION_JS, timeout=45.0
-                                )
-                                logger.info("Konum JS yaniti: %s", coords)
-                            except Exception as err:
-                                logger.error("Konum JS istegi hatasi: %s", err)
-
-                            if (
-                                isinstance(coords, dict)
-                                and coords.get("latitude") is not None
-                                and coords.get("longitude") is not None
-                                and not coords.get("error")
-                            ):
-                                new_lat = float(coords["latitude"])
-                                new_lon = float(coords["longitude"])
-                                accuracy = float(coords.get("accuracy") or 0.0)
-                                source = str(coords.get("source") or "gps")
-                                if refine_only and session_state.get("user_lat") is not None:
-                                    if source == "gps" and session_state.get(
-                                        "location_source"
-                                    ) == "gps":
-                                        shift_km = crud.haversine(
-                                            session_state["user_lat"],
-                                            session_state["user_lon"],
-                                            new_lat,
-                                            new_lon,
-                                        )
-                                        if shift_km < REFINE_LOCATION_MIN_KM:
-                                            logger.info(
-                                                "GPS ince ayar atlandi (kayma %.2f km)",
-                                                shift_km,
-                                            )
-                                            return
-                                await apply_location(
+                    if (
+                        isinstance(coords, dict)
+                        and coords.get("latitude") is not None
+                        and coords.get("longitude") is not None
+                        and not coords.get("error")
+                    ):
+                        new_lat = float(coords["latitude"])
+                        new_lon = float(coords["longitude"])
+                        accuracy = float(coords.get("accuracy") or 0.0)
+                        source = str(coords.get("source") or "gps")
+                        if refine_only and session_state.get("user_lat") is not None:
+                            if source == "gps" and session_state.get(
+                                "location_source"
+                            ) == "gps":
+                                shift_km = crud.haversine(
+                                    session_state["user_lat"],
+                                    session_state["user_lon"],
                                     new_lat,
                                     new_lon,
-                                    accuracy,
-                                    silent=refine_only,
-                                    fit_map=not refine_only,
-                                    recenter_user=refine_only,
-                                    source=source,
                                 )
-                                if not refine_only:
-                                    if source == "google_geolocation":
-                                        ui.notify(
-                                            f"Google konum tahmini (±{accuracy:.0f} m). "
-                                            "GPS izni verirseniz daha hassas olur.",
-                                            type="info",
-                                        )
-                                    else:
-                                        ui.notify(
-                                            f"GPS konumu alindi (±{accuracy:.0f} m)",
-                                            type="positive",
-                                        )
-                                return
+                                if shift_km < REFINE_LOCATION_MIN_KM:
+                                    logger.info(
+                                        "GPS ince ayar atlandi (kayma %.2f km)",
+                                        shift_km,
+                                    )
+                                    return
+                        await apply_location(
+                            new_lat,
+                            new_lon,
+                            accuracy,
+                            silent=refine_only,
+                            fit_map=not refine_only,
+                            recenter_user=refine_only,
+                            source=source,
+                        )
+                        if not refine_only:
+                            if source == "google_geolocation":
+                                ui.notify(
+                                    f"Google konum tahmini (±{accuracy:.0f} m). "
+                                    "GPS izni verirseniz daha hassas olur.",
+                                    type="info",
+                                )
+                            else:
+                                ui.notify(
+                                    f"GPS konumu alindi (±{accuracy:.0f} m)",
+                                    type="positive",
+                                )
+                        return
 
-                            if isinstance(coords, dict) and coords.get("error"):
-                                logger.warning("Konum hatasi: %s", coords["error"])
+                    if isinstance(coords, dict) and coords.get("error"):
+                        logger.warning("Konum hatasi: %s", coords["error"])
 
-                            if refine_only:
-                                return
+                    if refine_only:
+                        return
 
-                            err_msg = (
-                                coords.get("error")
-                                if isinstance(coords, dict)
-                                else "Konum alinamadi."
-                            )
-                            ui.notify(
-                                f"{err_msg} "
-                                "http://localhost:8080 adresinde konum izni verin "
-                                "veya haritaya tiklayarak isaretleyin.",
-                                type="warning",
-                                timeout=8000,
-                            )
-                            await update_map()
-                        except Exception as err:
-                            logger.error("Konum istegi genel hata: %s", err)
-                
-                ui.button(
-                    "Konumumu Yenile",
-                    on_click=lambda: request_location(force=True),
-                ).classes(
-                    "bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-12 h-10 px-4"
-                )
-                ui.button(
-                    "Hukuki Destek Al",
-                    on_click=legal_dialog.open,
-                ).classes(
-                    "bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-12 h-10 px-4"
-                )
-            
-            # Rol Degistirici (RBAC)
-            with ui.row().classes('items-center gap-2'):
-                ui.label('Rol:').classes('text-xs text-secondary')
-                
-                async def on_role_change(e):
-                    session_state["current_role"] = e.value
-                    session_state["current_user"] = "yonetici" if e.value == "Admin" else "ziyaretci"
-                    ui.notify(f"Rol {e.value} olarak güncellendi.", type='info')
-                    await refresh_elements()
-                
-                ui.select(
-                    options=['Guest', 'Admin'], 
-                    value=session_state["current_role"], 
-                    on_change=on_role_change
-                ).classes('w-28').props('outlined dense')
+                    err_msg = (
+                        coords.get("error")
+                        if isinstance(coords, dict)
+                        else "Konum alinamadi."
+                    )
+                    ui.notify(
+                        f"{err_msg} "
+                        "http://localhost:8080 adresinde konum izni verin "
+                        "veya haritaya tiklayarak isaretleyin.",
+                        type="warning",
+                        timeout=8000,
+                    )
+                    await update_map()
+                except Exception as err:
+                    logger.error("Konum istegi genel hata: %s", err)
 
-        # 2. Harita ve sag yan panel (kalan tum dikey alan)
-        with ui.card().classes('premium-card map-panel w-full p-0 overflow-hidden border border-slate-800').props('flat square'):
+        async def on_role_change(e):
+            session_state["current_role"] = e.value
+            session_state["current_user"] = (
+                "yonetici" if e.value == "Admin" else "ziyaretci"
+            )
+            ui.notify(f"Rol {e.value} olarak güncellendi.", type="info")
+            await refresh_elements()
+
+        # 1. Minimal Header (mobilde tek satir, kompakt ikonlar)
+        with ui.element('div').classes('premium-header'):
+            with ui.row().classes(
+                'header-bar w-full items-center justify-between flex-nowrap gap-2'
+            ):
+                with ui.column().classes('gap-0 min-w-0'):
+                    ui.label('PatiRota').classes(
+                        'mobile-logo text-lg md:text-2xl font-bold title-gradient m-0'
+                    )
+                    ui.label('En Yakın Barınaklar ve Rota Rehberi').classes(
+                        'header-tagline text-xs text-secondary m-0'
+                    )
+
+                with ui.row().classes(
+                    'header-actions items-center gap-1 flex-nowrap shrink-0'
+                ):
+                    ui.button(
+                        on_click=lambda: request_location(force=True),
+                    ).props('flat round dense icon=my_location').classes(
+                        'header-icon-btn'
+                    ).tooltip('Konumumu Yenile')
+                    ui.button(
+                        on_click=legal_dialog.open,
+                    ).props('flat round dense icon=gavel').classes(
+                        'header-icon-btn'
+                    ).tooltip('Hukuki Destek')
+                    if device_is_mobile:
+                        ui.button(
+                            on_click=open_places_drawer,
+                        ).props('flat round dense icon=menu').classes(
+                            'header-icon-btn mobile-drawer-toggle'
+                        ).tooltip('Liste')
+
+                    if not device_is_mobile:
+                        with ui.row().classes(
+                            'desktop-role-row items-center gap-2 shrink-0'
+                        ):
+                            ui.label('Rol:').classes('text-xs text-secondary')
+                            ui.select(
+                                options=["Guest", "Admin"],
+                                value=session_state["current_role"],
+                                on_change=on_role_change,
+                            ).classes('w-28').props('outlined dense')
+
+        # 2. Harita (tam ekran) + sag cekmece panel
+        with ui.card().classes(
+            'premium-card map-panel w-full p-0 overflow-hidden border border-slate-800'
+        ).props('flat square'):
             google_map_host = None
 
-            with ui.element('div').classes('shelter-layout').style(
-                'display:flex;flex-direction:row;flex-wrap:nowrap;align-items:stretch;'
-                'width:100%;height:100%;min-height:0;overflow:hidden;'
-            ):
-                map_pane_slot = ui.element('div').classes('map-pane').style(
-                    'flex:1 1 auto;min-width:0;max-width:calc(100% - 300px);'
-                    'height:100%;position:relative;overflow:hidden;'
-                )
-                sidebar_slot = ui.element('div').classes('shelter-sidebar').style(
-                    'flex:0 0 300px;width:300px;min-width:300px;height:100%;'
-                    'overflow-y:auto;overflow-x:hidden;'
-                )
+            with ui.element('div').classes('mobile-map-shell shelter-layout'):
+                map_pane_slot = ui.element('div').classes('map-pane')
+                ui.element('div').classes('drawer-backdrop')
+                sidebar_slot = ui.element('div').classes('shelter-sidebar')
                 with sidebar_slot:
+                    if device_is_mobile:
+                        with ui.row().classes(
+                            'drawer-mobile-top w-full items-center justify-between'
+                        ):
+                            ui.label('Yakın Yerler').classes(
+                                'text-sm font-bold text-primary m-0'
+                            )
+                            ui.button(
+                                on_click=close_places_drawer,
+                            ).props('flat round dense icon=close').classes(
+                                'drawer-close-btn'
+                            )
                     async def on_list_mode_change(e) -> None:
                         new_mode = e.value
                         if session_state.get("list_mode") == new_mode:
@@ -770,9 +851,6 @@ async def index_page():
                             get_sidebar_title()
                         ).classes("shelter-sidebar-title m-0")
                     sidebar_list_slot = ui.element("div").classes("shelter-sidebar-list")
-
-            map_update_lock = asyncio.Lock()
-            location_lock = asyncio.Lock()
 
             async def activate_shelter_route(
                 shelter_id: int,
@@ -854,6 +932,7 @@ async def index_page():
                                             s_id,
                                             open_navigation=False,
                                         )
+                                    close_places_drawer()
 
                                 title_label = ui.label(
                                     f"{idx + 1}. {sh['name']}"
