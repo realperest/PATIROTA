@@ -64,26 +64,70 @@ function patirotaShelterMapsDirUrl(sh, payload) {
     return url;
 }
 
-function patirotaShelterPlaceUrl(sh, payload) {
-    if (
-        payload &&
-        payload.locationReady &&
-        patirotaIsValidLatLng(sh.lat, sh.lng) &&
-        patirotaIsValidLatLng(payload.userLat, payload.userLon)
-    ) {
-        return patirotaShelterMapsDirUrl(sh, payload);
+function patirotaCanUseNativeGoogleNavigation(lat, lng) {
+    if (!patirotaIsValidLatLng(lat, lng)) {
+        return false;
     }
-    const lat = Number(sh.lat);
-    const lng = Number(sh.lng);
-    if (patirotaIsValidLatLng(lat, lng)) {
-        return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
-    }
-    const query = encodeURIComponent((sh.address || sh.name || "").trim());
-    return `https://www.google.com/maps/search/?api=1&query=${query}`;
+    const ua = (navigator.userAgent || "").toLowerCase();
+    return /android/.test(ua) || /iphone|ipad|ipod/.test(ua);
 }
 
-function patirotaShelterNavigationUrl(sh, payload) {
-    return patirotaShelterMapsDirUrl(sh, payload);
+function patirotaNativeNavigationUrl(lat, lng) {
+    const ua = (navigator.userAgent || "").toLowerCase();
+    if (/android/.test(ua)) {
+        return `google.navigation:q=${lat},${lng}`;
+    }
+    return `comgooglemaps://?daddr=${lat},${lng}&directionsmode=driving`;
+}
+
+function patirotaOpenRoute(sh, payload) {
+    const lat = Number(sh.lat);
+    const lng = Number(sh.lng);
+    const webDirUrl = patirotaShelterMapsDirUrl(sh, payload || {});
+
+    if (patirotaCanUseNativeGoogleNavigation(lat, lng)) {
+        const appUrl = patirotaNativeNavigationUrl(lat, lng);
+        let fallbackDone = false;
+        const openWebRoute = () => {
+            if (fallbackDone) {
+                return;
+            }
+            fallbackDone = true;
+            if (patirotaIsMobileDevice()) {
+                window.location.href = webDirUrl;
+            } else {
+                window.open(webDirUrl, "_blank", "noopener,noreferrer");
+            }
+        };
+        const timer = window.setTimeout(openWebRoute, 1500);
+        const cancelFallback = () => {
+            window.clearTimeout(timer);
+            fallbackDone = true;
+        };
+        document.addEventListener(
+            "visibilitychange",
+            () => {
+                if (document.hidden) {
+                    cancelFallback();
+                }
+            },
+            { once: true }
+        );
+        window.addEventListener("pagehide", cancelFallback, { once: true });
+        try {
+            window.location.href = appUrl;
+        } catch (err) {
+            window.clearTimeout(timer);
+            openWebRoute();
+        }
+        return;
+    }
+
+    if (patirotaIsMobileDevice()) {
+        window.location.href = webDirUrl;
+    } else {
+        window.open(webDirUrl, "_blank", "noopener,noreferrer");
+    }
 }
 
 function patirotaBuildSheltersById(shelters) {
@@ -145,13 +189,6 @@ function patirotaResolveShelter(state, payload, shelterId, fallback) {
     return patirotaNormalizeShelter(fallback || {}, fallback);
 }
 
-function patirotaAddInfoLine(root, text, style) {
-    const line = document.createElement("div");
-    line.style.cssText = style;
-    line.textContent = text;
-    root.appendChild(line);
-}
-
 function patirotaShelterInfoSummaryElement(sh) {
     const root = document.createElement("div");
     root.style.cssText =
@@ -177,7 +214,7 @@ function patirotaShelterInfoSummaryElement(sh) {
     const actionBtn = document.createElement("button");
     actionBtn.type = "button";
     actionBtn.setAttribute("data-patirota-nav-btn", "1");
-    actionBtn.textContent = "Yol tarifi ve navigasyon";
+    actionBtn.textContent = "ROTAYI OLUŞTUR";
     actionBtn.style.cssText =
         "display:block;width:100%;margin-top:12px;padding:10px 12px;border:none;border-radius:8px;background:#0d9488;color:#ffffff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;";
     root.appendChild(actionBtn);
@@ -204,8 +241,8 @@ function patirotaFindSummaryNavButton(infoWindow, root) {
     return document.querySelector(".gm-style-iw-d [data-patirota-nav-btn]");
 }
 
-function patirotaBindSummaryNavButton(infoWindow, root, onShowActions) {
-    if (!infoWindow || typeof onShowActions !== "function") {
+function patirotaBindSummaryNavButton(infoWindow, root, onOpenRoute) {
+    if (!infoWindow || typeof onOpenRoute !== "function") {
         return;
     }
     const attach = () => {
@@ -217,7 +254,7 @@ function patirotaBindSummaryNavButton(infoWindow, root, onShowActions) {
         btn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            onShowActions();
+            onOpenRoute();
         });
     };
     attach();
@@ -228,38 +265,6 @@ function patirotaIsMobileDevice() {
     return /Android|iPhone|iPad|iPod|Mobile|webOS|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent || ""
     );
-}
-
-function patirotaShelterInfoActionsElement(sh, payload) {
-    const root = document.createElement("div");
-    root.style.cssText =
-        "min-width:220px;max-width:300px;padding:8px 6px;background:#ffffff;color:#111827;font-family:system-ui,sans-serif;";
-
-    patirotaAddInfoLine(
-        root,
-        sh.name || "Barinak",
-        "font-size:13px;font-weight:800;color:#111827;margin-bottom:8px;"
-    );
-
-    const placeLink = document.createElement("a");
-    placeLink.href = patirotaShelterPlaceUrl(sh, payload);
-    placeLink.target = "_blank";
-    placeLink.rel = "noopener noreferrer";
-    placeLink.textContent = "Google Maps ile adrese git";
-    placeLink.style.cssText =
-        "display:block;margin-bottom:8px;padding:10px 12px;border-radius:8px;background:#1e293b;color:#f8fafc;text-decoration:none;font-size:12px;font-weight:700;text-align:center;";
-    root.appendChild(placeLink);
-
-    const navLink = document.createElement("a");
-    navLink.href = patirotaShelterNavigationUrl(sh, payload);
-    navLink.target = patirotaIsMobileDevice() ? "_self" : "_blank";
-    navLink.rel = "noopener noreferrer";
-    navLink.textContent = "Google navigasyon ile adrese git";
-    navLink.style.cssText =
-        "display:block;padding:10px 12px;border-radius:8px;background:#0d9488;color:#ffffff;text-decoration:none;font-size:12px;font-weight:700;text-align:center;";
-    root.appendChild(navLink);
-
-    return root;
 }
 
 function patirotaFindMarkerByShelterId(state, shelterId) {
@@ -282,26 +287,25 @@ function patirotaOnShelterMarkerClick(hostId, marker, payload, state) {
         state.markerClickState = { shelterId: null, phase: 0 };
     }
     const clickState = state.markerClickState;
-    let phase = "info";
-    if (
-        String(clickState.shelterId) === shelterId &&
-        clickState.phase === 1
-    ) {
-        phase = "actions";
-        clickState.phase = 2;
-    } else {
-        clickState.shelterId = shelterId;
-        clickState.phase = 1;
-    }
     const navPayload = {
         locationReady: payload.locationReady,
         userLat: payload.userLat,
         userLon: payload.userLon,
     };
-    patirotaShowShelterBalloon(hostId, detail, phase, navPayload);
+    const place = patirotaResolveShelter(state, payload, marker.patirotaShelterId, detail);
+    if (
+        String(clickState.shelterId) === shelterId &&
+        clickState.phase >= 1
+    ) {
+        patirotaOpenRoute(place, navPayload);
+        return;
+    }
+    clickState.shelterId = shelterId;
+    clickState.phase = 1;
+    patirotaShowShelterBalloon(hostId, detail, navPayload);
 }
 
-function patirotaShowShelterBalloon(hostId, detail, phase, navPayload) {
+function patirotaShowShelterBalloon(hostId, detail, navPayload) {
     const state = patirotaMapRegistry[hostId];
     if (!state || !detail) {
         return;
@@ -323,29 +327,12 @@ function patirotaShowShelterBalloon(hostId, detail, phase, navPayload) {
         lat: detail.lat,
         lng: detail.lng,
     };
-    if (phase === "actions") {
-        state.infoWindow.setContent(
-            patirotaShelterInfoActionsElement(place, navPayload || {})
-        );
-        state.infoWindow.open({ map: state.map, anchor: marker });
-        return;
-    }
-
     const summaryRoot = patirotaShelterInfoSummaryElement(place);
-    const showActions = () => {
-        state.markerClickState = {
-            shelterId: String(detail.id),
-            phase: 2,
-        };
-        patirotaShowShelterBalloon(
-            hostId,
-            detail,
-            "actions",
-            navPayload || {}
-        );
+    const openRoute = () => {
+        patirotaOpenRoute(place, navPayload || {});
     };
     state.infoWindow.setContent(summaryRoot);
-    patirotaBindSummaryNavButton(state.infoWindow, summaryRoot, showActions);
+    patirotaBindSummaryNavButton(state.infoWindow, summaryRoot, openRoute);
     state.infoWindow.open({ map: state.map, anchor: marker });
 }
 
