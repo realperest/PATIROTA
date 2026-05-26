@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0014"
+APP_ASSET_VERSION = "260526.0015"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -917,24 +917,25 @@ async def index_page():
                                 with ui.element("div").classes(
                                     "shelter-sidebar-details mt-2 pointer-events-auto w-full"
                                 ).style(text_style):
-                                    sh_payload = {
-                                        "id": sh["id"],
-                                        "lat": sh["latitude"],
-                                        "lng": sh["longitude"],
-                                        "name": sh["name"] or "",
-                                        "address": sh["address"] or "",
-                                        "phone": sh["phone"] or "",
-                                        "distanceKm": formatted_distance
-                                    }
-                                    nav_payload = {
-                                        "locationReady": session_state["location_ready"],
-                                        "userLat": session_state["user_lat"],
-                                        "userLon": session_state["user_lon"]
-                                    }
-                                    js_cmd = (
-                                        f"event.stopPropagation(); "
-                                        f"patirotaOpenRoute({json.dumps(sh_payload)}, {json.dumps(nav_payload)});"
-                                    )
+                                    async def create_route(e, s_id=sh["id"]):
+                                        # 1. Haritada rotayı çiz ve zoom yap
+                                        await activate_shelter_route(s_id, open_navigation=False)
+                                        # 2. İstemci tarafında navigasyonu tetikle
+                                        sh_payload = {
+                                            "id": sh["id"],
+                                            "lat": sh["latitude"],
+                                            "lng": sh["longitude"],
+                                            "name": sh["name"] or "",
+                                            "address": sh["address"] or "",
+                                            "phone": sh["phone"] or "",
+                                            "distanceKm": formatted_distance
+                                        }
+                                        nav_payload = {
+                                            "locationReady": session_state["location_ready"],
+                                            "userLat": session_state["user_lat"],
+                                            "userLon": session_state["user_lon"]
+                                        }
+                                        ui.run_javascript(f"patirotaOpenRoute({json.dumps(sh_payload)}, {json.dumps(nav_payload)});")
 
                                     with ui.row().classes("w-full justify-between items-end flex-nowrap gap-1"):
                                         # Sol tarafta telefon ve adres alt alta (kompakt)
@@ -947,7 +948,7 @@ async def index_page():
                                         # Sağ tarafta ROTA OLUŞTUR butonu
                                         ui.button("ROTA OLUŞTUR").classes(
                                             "text-[10px] font-bold p-1 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shrink-0 shadow-sm ml-2 h-7"
-                                        ).props("dense flat no-caps").on("click", js_handler=js_cmd)
+                                        ).props("dense flat no-caps").on("click", create_route, modifiers=["stop"])
 
             async def update_map(
                 fit_map: bool = False,
