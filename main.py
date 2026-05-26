@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0017"
+APP_ASSET_VERSION = "260526.0018"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -945,10 +945,24 @@ async def index_page():
                                             if sh["address"]:
                                                 ui.label(sh["address"]).classes("text-[11px] leading-tight").style(text_style)
                                                 
+                                    async def create_route(e, s_id=sh["id"]):
+                                        # Haritada rotayı çiz ve zoom yap
+                                        await activate_shelter_route(s_id, open_navigation=False)
+
+                                    js_cmd = f"event.stopPropagation(); window.patirotaOpenRouteFromSidebar({sh['id']});"
+
+                                    with ui.row().classes("w-full justify-between items-end flex-nowrap gap-1"):
+                                        # Sol tarafta telefon ve adres alt alta (kompakt)
+                                        with ui.column().classes("gap-0.5 min-w-0 flex-1"):
+                                            if sh["phone"]:
+                                                ui.label(f"Tel: {sh['phone']}").classes("text-[11px] leading-tight").style(text_style)
+                                            if sh["address"]:
+                                                ui.label(sh["address"]).classes("text-[11px] leading-tight").style(text_style)
+                                                
                                         # Sağ tarafta ROTA OLUŞTUR butonu
                                         ui.button("ROTA OLUŞTUR").classes(
                                             "text-[10px] font-bold p-1 px-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded shrink-0 shadow-sm ml-2 h-7"
-                                        ).props("dense flat no-caps").on("click.stop", create_route)
+                                        ).props("dense flat no-caps").on("click", create_route, js_handler=js_cmd)
 
             async def update_map(
                 fit_map: bool = False,
@@ -1000,6 +1014,58 @@ async def index_page():
         async def refresh_elements():
             update_legal_view()
             await update_map()
+
+        # Rota yardimci fonksiyonu enjeksiyonu (Popup engelleyiciyi asmak icin)
+        ui.add_body_html("""
+        <script>
+            window.patirotaOpenRouteFromSidebar = function(shelterId) {
+                const key = String(shelterId);
+                if (!window.PATIROTA_SHELTER_DETAILS || !window.PATIROTA_SHELTER_DETAILS[key]) {
+                    console.error("Barinak detaylari bulunamadi: " + shelterId);
+                    return;
+                }
+                const detail = window.PATIROTA_SHELTER_DETAILS[key];
+                
+                let userLat = null;
+                let userLon = null;
+                let locationReady = false;
+                if (typeof patirotaMapRegistry !== "undefined") {
+                    for (const hostId of Object.keys(patirotaMapRegistry)) {
+                        const state = patirotaMapRegistry[hostId];
+                        if (state && state.lastUserPos) {
+                            userLat = state.lastUserPos.lat;
+                            userLon = state.lastUserPos.lng;
+                            locationReady = true;
+                            break;
+                        }
+                    }
+                }
+                
+                const place = {
+                    id: detail.id,
+                    n: detail.n,
+                    name: detail.name || "",
+                    address: detail.address || "",
+                    phone: detail.phone || "",
+                    distanceKm: detail.distanceKm || "",
+                    lat: detail.lat,
+                    lng: detail.lng
+                };
+                
+                const navPayload = {
+                    locationReady: locationReady,
+                    userLat: userLat,
+                    userLon: userLon
+                };
+                
+                if (typeof patirotaOpenRoute === "function") {
+                    patirotaOpenRoute(place, navPayload);
+                } else {
+                    console.error("patirotaOpenRoute fonksiyonu yuklenmemis.");
+                }
+            };
+        </script>
+        """)
 
     await update_map()
 
