@@ -6,8 +6,10 @@ Bu oturumda, kullanıcının talepleri doğrultusunda yan paneldeki barınak/vet
 ## 2. Yapılan Değişiklikler ve Kararlar
 
 ### A. ROTA OLUŞTUR Butonunun Çalışmama Sorununun Çözülmesi
-- NiceGUI üzerinde `.on("click.stop", ...)` olayının event handler'ı sunucu tarafında doğru tetikleyememesi (event name mismatch) hatası giderilmiştir.
-- Olay dinleyicisi NiceGUI'nin resmi standardı olan `.on("click", create_route, modifiers=["stop"])` formatına çekilmiştir. Bu sayede hem event bubbling engellenmiş (tıklamanın kartı kapatması önlenmiş) hem de asenkron Python handler'ı (`create_route`) başarılı bir şekilde tetiklenerek rota çizimi ve navigasyon başlatılmıştır.
+- NiceGUI üzerinde asenkron Python handler'ı ve `ui.run_javascript` tetikleyicisi yerine, doğrudan tarayıcı düzeyinde çalışacak saf JavaScript handler'ı (`js_handler`) buton olayına bağlanmıştır.
+- Butona tıklanması durumunda sunucuya (Python) gitmeden doğrudan tarayıcıda `patirotaOpenRoute` Javascript fonksiyonu çağrılmaktadır.
+- Olayın kartı kapatmasını önleyen bubbling (yayılma) davranışı, JS düzeyinde `event.stopPropagation()` ile tarayıcıda anında ve kesin olarak engellenmiştir.
+- Bu sayede yan paneldeki "ROTA OLUŞTUR" butonu ile haritadaki bilgi balonunda yer alan ve kararlı şekilde çalışan "ROTAYI OLUŞTUR" butonu tamamen aynı çalışma prensibine (client-side tetikleme) kavuşturulmuştur.
 
 ### B. Kart Tıklaması ile Rota Zoom Davranışı
 - **Karta Tıklandığında:** Kart aşağı doğru genişleyerek telefon, adres ve rota oluşturma butonunu gösterir. Aynı zamanda harita üzerinde ilgili barınağa giden rota çizgisi çizilir ve harita o rotaya odaklanacak şekilde **zoom** yapar. Navigasyon ise tetiklenmez.
@@ -21,11 +23,11 @@ Bu oturumda, kullanıcının talepleri doğrultusunda yan paneldeki barınak/vet
 
 ### D. Versiyon Gösterim Kutusunun Kaldırılması
 - Kullanıcının doğrudan talebi üzerine, sağ alt köşedeki versiyon gösterim kutusu (`patirota-version-info`) arayüzden ve koddan tamamen kaldırılmıştır.
-- Asset önbellek kırma sürümü `APP_ASSET_VERSION = "260526.0013"` olarak güncellenmiştir.
+- Asset önbellek kırma sürümü `APP_ASSET_VERSION = "260526.0014"` olarak güncellenmiştir.
 
 ## 3. Değiştirilen Dosyalar
 1. **[baslat.bat](file:///d:/KODLAMALAR/GITHUB/PATIROTA/baslat.bat)**: `RELOAD=1` yapıldı.
-2. **[main.py](file:///d:/KODLAMALAR/GITHUB/PATIROTA/main.py)**: Arayüz geliştirmeleri, navigasyon entegrasyonu, buton konumlandırma ve olay dinleyici düzeltmesi, bildirimlerin ve versiyon kutusunun kaldırılması uygulandı.
+2. **[main.py](file:///d:/KODLAMALAR/GITHUB/PATIROTA/main.py)**: Arayüz geliştirmeleri, navigasyon entegrasyonu, buton konumlandırma ve olay dinleyici düzeltmesi (JS handler), bildirimlerin ve versiyon kutusunun kaldırılması uygulandı.
 3. **[konusmalar/konusma02.md](file:///d:/KODLAMALAR/GITHUB/PATIROTA/konusmalar/konusma02.md)**: Bu log dosyası güncellendi.
 
 ## 4. Takip Edilecekler / Sonraki Adımlar
