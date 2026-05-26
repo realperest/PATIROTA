@@ -54,7 +54,7 @@ if not defined GOOGLE_MAPS_API_KEY (
 
 set LOCAL_DEV=1
 set OPEN_BROWSER=1
-set RELOAD=0
+set RELOAD=1
 python main.py
 
 pause

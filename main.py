@@ -48,7 +48,7 @@ class ShelterResponse(BaseModel):
     distance: float
 
 # Statik dosya onbellek kirma (YYMMDD.XXXX)
-APP_ASSET_VERSION = "260526.0004"
+APP_ASSET_VERSION = "260526.0008"
 
 LIST_MODE_SHELTERS = "shelters"
 LIST_MODE_VETERINARIANS = "veterinarians"
@@ -458,6 +458,7 @@ async def init_session_data():
 
 @ui.page('/')
 async def index_page():
+    ui.dark_mode().enable()
     await init_session_data()
 
     device_mode = get_client_device_mode()
@@ -514,7 +515,7 @@ async def index_page():
     
     # --- DIALOG / MODAL: Hukuki Destek (İstek 1) ---
     with ui.dialog() as legal_dialog, ui.card().classes('w-full max-w-2xl bg-slate-900 border border-slate-800 p-6 flex flex-col gap-4') as legal_card:
-        ui.label('Hayvan Hakları ve Resmi Dilekçe Şablonları').classes('text-xl font-bold text-primary m-0')
+        ui.label('Hukuki Rehber ve Mevzuat').classes('text-xl font-bold text-primary m-0')
         
         status_list = await crud.get_status_list()
         status_options = {s["id"]: s["display_name"] for s in status_list}
@@ -547,23 +548,10 @@ async def index_page():
                     ui.label('Yasal Dayanak (5199 Sayılı Kanun):').classes('text-xs text-secondary font-bold uppercase')
                     ui.label(template["law_reference"]).classes('text-sm text-primary mt-1 font-medium')
                 
-                # Dilekçe
-                ui.label('Resmi Dilekçe Şablonu:').classes('text-xs text-secondary font-bold uppercase mb-1')
-                dilekce_textarea = ui.textarea(
-                    value=template["template_text"]
-                ).props('readonly autogrow outlined').classes('w-full font-mono text-xs')
-                
-                # Kaydet butonu (Admin Yetkisi)
-                async def save_template():
-                    is_allowed = await crud.check_permission(session_state["current_role"], 'legal', 'edit')
-                    if not is_allowed:
-                        ui.notify("Bu dilekçeyi düzenlemek için 'Admin' yetkiniz bulunmamaktadır!", type='negative')
-                        return
-                    ui.notify("Dilekçe şablonu başarıyla güncellendi.", type='positive')
-                
-                with ui.row().classes('justify-between items-center w-full mt-2'):
-                    ui.label('* Kopyalayarak resmi mercilere sunabilirsiniz.').classes('text-xs text-secondary italic')
-                    ui.button('Şablonu Düzenle ve Kaydet', on_click=save_template).classes('btn-premium text-xs')
+                # Rehber Açıklaması
+                ui.label('Nasıl İlerlemelisiniz?').classes('text-xs text-secondary font-bold uppercase mb-1 mt-2')
+                with ui.element('div').classes('p-4 rounded-lg bg-slate-800 border border-slate-700'):
+                    ui.label(template["template_text"]).classes('text-sm text-slate-200 whitespace-pre-wrap')
         
         update_legal_view()
         ui.button('Kapat', on_click=legal_dialog.close).classes('w-full bg-slate-800 hover:bg-slate-700 text-white rounded-lg mt-2')
@@ -598,10 +586,6 @@ async def index_page():
                 logger.warning(
                     "Gecersiz konum reddedildi: lat=%s lon=%s", u_lat, u_lon
                 )
-                ui.notify(
-                    "Konum gecersiz. Konumumu Yenile ile tekrar deneyin.",
-                    type="warning",
-                )
                 return
             session_state["user_lat"] = u_lat
             session_state["user_lon"] = u_lon
@@ -625,11 +609,6 @@ async def index_page():
                 recenter_user=recenter_user,
                 zoom_to_shelter_id=session_state["selected_shelter_id"],
             )
-            if not silent:
-                ui.notify(
-                    f"Konum guncellendi (±{accuracy:.0f} m)",
-                    type="positive",
-                )
 
         async def request_location(
             force: bool = False,
@@ -691,17 +670,11 @@ async def index_page():
                             source=source,
                         )
                         if not refine_only:
-                            if source == "google_geolocation":
-                                ui.notify(
-                                    f"Google konum tahmini (±{accuracy:.0f} m). "
-                                    "GPS izni verirseniz daha hassas olur.",
-                                    type="info",
-                                )
-                            else:
-                                ui.notify(
-                                    f"GPS konumu alindi (±{accuracy:.0f} m)",
-                                    type="positive",
-                                )
+                            logger.info(
+                                "Konum alindi: source=%s accuracy=%.1fm",
+                                source,
+                                accuracy,
+                            )
                         return
 
                     if isinstance(coords, dict) and coords.get("error"):
@@ -715,12 +688,9 @@ async def index_page():
                         if isinstance(coords, dict)
                         else "Konum alinamadi."
                     )
-                    ui.notify(
-                        f"{err_msg} "
-                        "http://localhost:8080 adresinde konum izni verin "
-                        "veya haritaya tiklayarak isaretleyin.",
-                        type="warning",
-                        timeout=8000,
+                    logger.warning(
+                        "Konum alinamadi: %s",
+                        err_msg,
                     )
                     await update_map()
                 except Exception as err:
@@ -731,7 +701,7 @@ async def index_page():
             session_state["current_user"] = (
                 "yonetici" if e.value == "Admin" else "ziyaretci"
             )
-            ui.notify(f"Rol {e.value} olarak güncellendi.", type="info")
+            logger.info("Rol %s olarak güncellendi.", e.value)
             await refresh_elements()
 
         # 1. Minimal Header (mobilde tek satir, kompakt ikonlar)
@@ -834,7 +804,7 @@ async def index_page():
                                     )
                         sidebar_title_label.text = get_sidebar_title()
                         mode_label = LIST_MODE_OPTIONS.get(new_mode, new_mode)
-                        ui.notify(f"Liste: {mode_label}", type="info")
+                        logger.info("Liste modu degisti: %s", mode_label)
                         await update_map(
                             fit_map=session_state.get("location_ready", False),
                         )
@@ -864,10 +834,7 @@ async def index_page():
                 if not shelter:
                     return
                 await update_map(zoom_to_shelter_id=shelter_id)
-                ui.notify(
-                    f"{shelter['name']} rotasi secildi.",
-                    type="positive",
-                )
+                logger.info("%s rotasi secildi.", shelter['name'])
                 if open_navigation:
                     ui.run_javascript(
                         f'window.open({json.dumps(google_maps_directions_url(shelter))}, "_blank")'
@@ -889,7 +856,7 @@ async def index_page():
                         silent=True,
                         fit_map=True,
                     )
-                ui.notify("Konum haritadan secildi.", type="positive")
+                logger.info("Konum haritadan secildi: lat=%s lon=%s", u_lat, u_lon)
 
             async def on_shelter_marker_click(e) -> None:
                 """Balon JS tarafinda acilir; burada yalnizca panel secimi guncellenir."""
@@ -912,7 +879,7 @@ async def index_page():
                         formatted_distance = f"{sh['distance']:.2f}".replace(".", ",")
                         gmaps_url = google_maps_directions_url(sh)
                         is_selected = sh["id"] == session_state["selected_shelter_id"]
-                        item_classes = "shelter-sidebar-item"
+                        item_classes = "shelter-sidebar-item cursor-pointer transition-all duration-300"
                         if is_selected:
                             item_classes += " shelter-sidebar-item-selected"
                         border_width = "6px" if is_selected else "4px"
@@ -921,43 +888,46 @@ async def index_page():
                             f"box-shadow:0 0 12px {route_color}33;"
                         )
 
-                        with ui.element("div").classes(item_classes).style(item_style):
-                            with ui.element("div").classes("shelter-sidebar-header"):
-                                async def select_shelter(s_id=sh["id"]):
-                                    if session_state["selected_shelter_id"] == s_id:
-                                        session_state["selected_shelter_id"] = None
-                                        await update_map(fit_map=True)
-                                    else:
-                                        await activate_shelter_route(
-                                            s_id,
-                                            open_navigation=False,
-                                        )
-                                    close_places_drawer()
+                        with ui.element("div").classes(item_classes).style(item_style) as item_card:
+                            async def select_shelter(e, s_id=sh["id"]):
+                                if session_state["selected_shelter_id"] == s_id:
+                                    session_state["selected_shelter_id"] = None
+                                    await update_map(fit_map=True)
+                                else:
+                                    await activate_shelter_route(
+                                        s_id,
+                                        open_navigation=False,
+                                    )
 
+                            # Kartın tamamına tıklama özelliği ekliyoruz
+                            item_card.on("click", select_shelter)
+
+                            with ui.element("div").classes("shelter-sidebar-header pointer-events-none"):
                                 title_label = ui.label(
                                     f"{idx + 1}. {sh['name']}"
-                                ).classes("shelter-sidebar-name cursor-pointer").style(
+                                ).classes("shelter-sidebar-name").style(
                                     f"{text_style}font-weight:700;"
                                 )
-                                title_label.on("click", select_shelter)
                                 ui.label(f"{formatted_distance} KM").classes(
                                     "shelter-sidebar-distance"
                                 ).style(f"{text_style}font-weight:800;")
 
-                            with ui.element("div").classes(
-                                "shelter-sidebar-details"
-                            ).style(text_style):
-                                if sh["phone"]:
-                                    ui.label(f"Tel: {sh['phone']}").style(text_style)
-                                if sh["address"]:
-                                    ui.label(sh["address"]).style(text_style)
-                                ui.link(
-                                    "Google Maps ile Git",
-                                    gmaps_url,
-                                    new_tab=True,
-                                ).classes(
-                                    "text-[11px] mt-1 hover:underline"
-                                ).style(text_style)
+                            # Detaylar sadece seciliyse (accordion acik) gosterilecek
+                            if is_selected:
+                                with ui.element("div").classes(
+                                    "shelter-sidebar-details mt-2 pointer-events-auto"
+                                ).style(text_style):
+                                    if sh["phone"]:
+                                        ui.label(f"Tel: {sh['phone']}").style(text_style)
+                                    if sh["address"]:
+                                        ui.label(sh["address"]).style(text_style)
+                                    ui.link(
+                                        "Google Maps ile Git",
+                                        gmaps_url,
+                                        new_tab=True,
+                                    ).classes(
+                                        "text-[12px] font-bold mt-2 hover:underline inline-block p-1 bg-slate-800 rounded"
+                                    ).style(text_style)
 
             async def update_map(
                 fit_map: bool = False,
@@ -1009,6 +979,44 @@ async def index_page():
         async def refresh_elements():
             update_legal_view()
             await update_map()
+
+        # Kural 5: Sayfa tabanlı otomatik versiyonlama kutusu
+        ui.add_body_html(f"""
+        <div id="patirota-version-info" style="position: fixed; bottom: 8px; right: 8px; z-index: 9999; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 6px 10px; font-size: 10px; text-align: right; font-family: monospace; pointer-events: none; line-height: 1.35; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+            <!-- Versiyon listesi JS ile doldurulacak -->
+        </div>
+        <script>
+            (function() {{
+                const currentVer = "260526.0008";
+                const versionHistory = [
+                    "260526.0008",
+                    "260526.0007",
+                    "260526.0006"
+                ];
+                const viewedVersions = JSON.parse(localStorage.getItem("viewed_versions") || "[]");
+                const isNew = !viewedVersions.includes(currentVer);
+                
+                if (isNew) {{
+                    viewedVersions.push(currentVer);
+                    localStorage.setItem("viewed_versions", JSON.stringify(viewedVersions));
+                }}
+                
+                const container = document.getElementById("patirota-version-info");
+                if (container) {{
+                    let html = "";
+                    versionHistory.forEach((v, idx) => {{
+                        const isLatest = idx === 0;
+                        let colorStyle = "color: #94a3b8;";
+                        if (isLatest) {{
+                            colorStyle = isNew ? "color: #10b981; font-weight: bold;" : "color: #f8fafc; font-weight: bold;";
+                        }}
+                        html += `<div style="${{colorStyle}}">${{isLatest ? '<b>' : ''}}v${{v}}${{isLatest ? '</b>' : ''}}</div>`;
+                    }});
+                    container.innerHTML = html;
+                }}
+            }})();
+        </script>
+        """)
 
     await update_map()
 

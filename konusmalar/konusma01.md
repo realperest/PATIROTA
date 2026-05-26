@@ -2006,3 +2006,920 @@ HÃ¢lÃ¢ kayÄ±ksa ekran gÃ¶rÃ¼ntÃ¼sÃ¼ atÄ±n; `bottom` padding ile 
 
 aynÄ± isimde bir githup reposu oluÅŸtur ve klasÃ¶rdekileri push et
 
+
+## Assistant - 2026-05-26 00:37:15
+
+**GitHub deposu oluÅŸturuldu ve push tamamlandÄ±.**
+
+**Depo:** https://github.com/realperest/PATIROTA
+
+**YapÄ±lanlar:**
+- `git init` ile yerel repo oluÅŸturuldu
+- 19 dosya commit edildi (`.env.local` `.gitignore` sayesinde **dahil edilmedi**)
+- GitHubâ€™da **PATIROTA** adlÄ± public repo aÃ§Ä±ldÄ±
+- `master` dalÄ± `origin/master`â€™a push edildi
+
+**Commit:** `PatiRota: Google Maps tabanli barinak ve veteriner rota uygulamasi ilk yukleme`
+
+API anahtarÄ±nÄ±z repoda yok; canlÄ± ortamda GitHub Secrets veya Railway/Cloudflare env Ã¼zerinden `GOOGLE_MAPS_API_KEY` tanÄ±mlamanÄ±z yeterli.
+
+
+## User - 2026-05-26 09:52:07
+
+Deployment
+PATIROTA
+
+production
+
+PATIROTA (localhost)
+Exited
+Configuration
+Deployments
+Logs
+Terminal
+
+Links
+
+Advanced
+Deploy
+Deployment Log
+Deployment is
+Failed
+Find in logs
+
+
+
+
+
+
+2026-May-26 06:49:54.489957
+Docker 29.4.1 with BuildKit and Buildx detected on deployment server (localhost).
+2026-May-26 06:49:54.499353
+Starting deployment of realperest/PATIROTA:master to localhost.
+2026-May-26 06:49:54.631943
+Preparing container with helper image: ghcr.io/coollabsio/coolify-helper:1.0.14
+2026-May-26 06:49:57.109777
+Image not found (mqkjm6zdraiwswk2sg8jw0z5:6f2a6938f90c78d0c944e5474523e076ccf8e11a). Building new image.
+2026-May-26 06:49:57.512941
+----------------------------------------
+2026-May-26 06:49:57.519308
+Importing realperest/PATIROTA:master (commit sha 6f2a6938f90c78d0c944e5474523e076ccf8e11a) to /artifacts/y9mxwynsw3rygta0i2ck190t.
+2026-May-26 06:49:59.294306
+Generating nixpacks configuration with: nixpacks plan -f json --env 'NIXPACKS_NODE_VERSION=22' --env 'COOLIFY_URL=https://patirota.89.45.45.152.sslip.io' --env 'COOLIFY_FQDN=patirota.89.45.45.152.sslip.io' --env 'COOLIFY_BRANCH=master' --env 'COOLIFY_RESOURCE_UUID=mqkjm6zdraiwswk2sg8jw0z5' /artifacts/y9mxwynsw3rygta0i2ck190t
+2026-May-26 06:49:59.517951
+Found application type: python.
+2026-May-26 06:49:59.526299
+If you need further customization, please check the documentation of Nixpacks: https://nixpacks.com/docs/providers/python
+2026-May-26 06:49:59.966915
+----------------------------------------
+2026-May-26 06:49:59.977717
+Building docker image started.
+2026-May-26 06:49:59.986442
+To check the current progress, click on Show Debug Logs.
+2026-May-26 06:51:01.752693
+========================================
+2026-May-26 06:51:01.765253
+Deployment failed: Command execution failed (exit code 1): docker exec y9mxwynsw3rygta0i2ck190t bash -c 'bash /artifacts/build.sh'
+2026-May-26 06:51:01.765253
+Error: #0 building with "default" instance using docker driver
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#1 [internal] load build definition from Dockerfile
+2026-May-26 06:51:01.765253
+#1 transferring dockerfile: 1.67kB done
+2026-May-26 06:51:01.765253
+#1 DONE 0.1s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#2 [internal] load metadata for ghcr.io/railwayapp/nixpacks:ubuntu-1745885067
+2026-May-26 06:51:01.765253
+#2 DONE 1.7s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#3 [internal] load .dockerignore
+2026-May-26 06:51:01.765253
+#3 transferring context: 2B done
+2026-May-26 06:51:01.765253
+#3 DONE 0.1s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#4 [stage-0 1/9] FROM ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de
+2026-May-26 06:51:01.765253
+#4 resolve ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de 0.1s done
+2026-May-26 06:51:01.765253
+#4 ...
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#5 [internal] load build context
+2026-May-26 06:51:01.765253
+#5 transferring context: 296.77kB done
+2026-May-26 06:51:01.765253
+#5 DONE 0.2s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#4 [stage-0 1/9] FROM ghcr.io/railwayapp/nixpacks:ubuntu-1745885067@sha256:d45c89d80e13d7ad0fd555b5130f22a866d9dd10e861f589932303ef2314c7de
+2026-May-26 06:51:01.765253
+#4 DONE 0.4s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#6 [stage-0 2/9] WORKDIR /app/
+2026-May-26 06:51:01.765253
+#6 DONE 0.1s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#7 [stage-0 3/9] COPY .nixpacks/nixpkgs-bc8f8d1be58e8c8383e683a06e1e1e57893fff87.nix .nixpacks/nixpkgs-bc8f8d1be58e8c8383e683a06e1e1e57893fff87.nix
+2026-May-26 06:51:01.765253
+#7 DONE 0.1s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#8 [stage-0 4/9] RUN nix-env -if .nixpacks/nixpkgs-bc8f8d1be58e8c8383e683a06e1e1e57893fff87.nix && nix-collect-garbage -d
+2026-May-26 06:51:01.765253
+#8 0.176 unpacking 'https://github.com/NixOS/nixpkgs/archive/bc8f8d1be58e8c8383e683a06e1e1e57893fff87.tar.gz' into the Git cache...
+2026-May-26 06:51:01.765253
+#8 30.86 installing 'bc8f8d1be58e8c8383e683a06e1e1e57893fff87-env'
+2026-May-26 06:51:01.765253
+#8 33.15 these 3 derivations will be built:
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/w9wjpgsiwxjv9p6166ax2mns747lmv2c-libraries.drv
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/g3lchy17nx4gv4bw71jnpiinxs47bg4s-bc8f8d1be58e8c8383e683a06e1e1e57893fff87-env.drv
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/b0x1xin8h03k1qlv2w60817zvams9drr-bc8f8d1be58e8c8383e683a06e1e1e57893fff87-env.drv
+2026-May-26 06:51:01.765253
+#8 33.15 these 61 paths will be fetched (125.16 MiB download, 519.13 MiB unpacked):
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/0dglgnjm2s5qg4ar6m33lpclqig0kg2x-acl-2.3.2
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/j2v823114cc2dqfvprlcx9h7i941kknh-attr-2.5.2
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/mm0pa3z7kk6jh1i9rkxqxjqmd8h1qpxf-bash-5.2p37
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/pbixrqd120nnw8a0ygfpm3mnwlr1mbj7-binutils-2.43.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/ywxfq90ijq9kys4g5wzyrg2f4in0iphd-binutils-2.43.1-lib
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/l13l2ipc1xn5npjrw511y0yfh4ghinmf-binutils-wrapper-2.43.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/nzi7rdydpky7lxv6mlvgcdpvdasaxcmq-builder.pl
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/6amvjdayglsifq4lb2lrj4q5gwf4dicd-bzip2-1.0.8
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/0kxxaix9l5dbih90491mv96zajsac57q-bzip2-1.0.8-bin
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/sf6y4arqcm100rnnl3dhpg732i774zp6-coreutils-9.5
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/alq4bqllykgwrif112yqgrn9g001kn7b-diffutils-3.10
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/b1rvxspjrw0f3y5iz4pcygams0n9yas4-ed-1.20.2
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/zx2bmicmgjh0inkgffd7agxz47j4xxql-expand-response-params
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/cnmw0v80xbp4ldc79an5kb2p8a3ia6k5-expat-2.6.3
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/vkv9a83hknlnr7p2z8mwl16j5pb502gp-file-5.45
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/psjqqbj19n3fqssn38hgz4cv7b7a9alp-findutils-4.10.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/1cd3p3kjh9c209s7832z8i3b8qcqggca-gawk-5.3.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/v7dbfh5n7az2lcap0z1cv4jq0bikya8p-gcc-13.3.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/s94fwp43xhzkvw8l8nqslskib99yifzi-gcc-13.3.0-lib
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/c91k93z9yr1cpia2pf5dr226imglrkg5-gcc-13.3.0-libgcc
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/zls8qr49k7bkdfb9ncqz9w38q5m8zkld-gcc-13.3.0-man
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/hgw57m0jh2w10jsv8x86ng267pm5sla8-gcc-wrapper-13.3.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/bhd4nlz0993jcsmp7b4fpgjyc9knh1yx-gcc-wrapper-13.3.0-man
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/h9bcdwky1hznar341kl52g7hidcjxfdc-gdbm-1.24-lib
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/3bvxjkkmwlymr0fssczhgi39c3aj1l7i-glibc-2.40-36
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/5571d6dklkwfcp1812dj4lxb0gl3w1yw-glibc-2.40-36-bin
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/932dj5qwfzck90mnvqpd1f9hjqznaqdj-glibc-2.40-36-dev
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/fbir2hb0b8b9n9by2qkmr4sjscds5017-gmp-6.3.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/i2bs001zwvii9qbhk6mm291gqybpij87-gmp-with-cxx-6.3.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/vcwb5qr1yjn3pwbm9gnmvqmn1gwg9a1y-gnu-config-2024-01-01
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/nysgss3ggh3dv7mz08n28h29lazxhyc1-gnugrep-3.11
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/iyrpqn6ana7j804dzis338n74kzznmj0-gnumake-4.4.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/13wxcn0j2wk911ahfkbvdq241rkprsv8-gnused-4.9
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/cqyjb712c5q3axw9qjij05dnji2a7z48-gnutar-1.35
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/qfc6wq1wpxvkkjqa6xr5685ip97qc3sr-gzip-1.13
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/1v4kdwh68m221n160qxy1dgw64mg5z30-isl-0.20
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/0qiyy7llb8ldillvlvjz1pyawhs5cvpk-libffi-3.4.6
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/3wjcy2waiy7cr1v0kvi73aj6i90d878d-libidn2-2.3.7
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/wjvrhcaf0qjh4j463sz0fdday7qx8ga8-libmpc-1.3.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/7hpmrpicmvqgpnnj9i6470y1s7dh336z-libunistring-1.2
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/3nkb6rscay1w5ky9xziy7qnjl0i4dx25-libxcrypt-4.4.36
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/h4xcr5vxpz2wj4igjwdw85vjcxicspbx-linux-headers-6.10
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/fj4kfzzrb0jjc2z96kcklas807r92qhg-mailcap-2.1.54
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/py23xbn1b57hzbzpsyyfkp1rv5mh5pwa-mpdecimal-4.0.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/k9s1aafqr83v8v4qv28px2i457dx6ix9-mpfr-4.2.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/c7qx9iq6lqfjd4dxrdd6723l6rvzsj5s-ncurses-6.4.20221231
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/m8gwqmn8k3jm0gbcia358mz4y00lgmbc-openssl-3.3.2
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/3yv1shg4kg4ifkxzg2jgjsrrrd8s1w08-patch-2.7.6
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/r9gxdanbg938b9vimis7akyawkyb0yax-patchelf-0.15.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/svlfxp9ips8gphsjz7ah2lsnirm2fhql-pcre2-10.44
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/pg37w2gymgf5rdlp00c3jn7hw37bnmyc-perl-5.40.0
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/901c80rlps5q05bnjk1sj4zaz5k736nc-python3-3.12.7
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/rf0rvd79mdhy427nv1wv9shkc9nglijz-readline-8.2p13
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/b4cqpglpjvkjhb8l4dh1ammpg8gk6h9p-sqlite-3.46.1
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/1m9h3isxr4jh67yjjx540qf3sxwxhy3y-stdenv-linux
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/5z7yfmp96ijpx0lhy5gpj65i38972330-tzdata-2024b
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/7hsml574k621n842nwnl8qhix3i2q6mv-update-autotools-gnu-config-scripts-hook
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/1hf92di50fsyqxcgsfi3z48hc05rm1a9-xgcc-13.3.0-libgcc
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/wp5xd6g6v3mafvdh2185v19diqqf0cm2-xz-5.6.3
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/g0ih6cb93dm4n18bah982gsmayah3amy-xz-5.6.3-bin
+2026-May-26 06:51:01.765253
+#8 33.15   /nix/store/ncjma3lhr1sf6mqaczl9mfhjmp6ix58w-zlib-1.3.1
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/nzi7rdydpky7lxv6mlvgcdpvdasaxcmq-builder.pl' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/zls8qr49k7bkdfb9ncqz9w38q5m8zkld-gcc-13.3.0-man' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/fj4kfzzrb0jjc2z96kcklas807r92qhg-mailcap-2.1.54' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/5z7yfmp96ijpx0lhy5gpj65i38972330-tzdata-2024b' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/c91k93z9yr1cpia2pf5dr226imglrkg5-gcc-13.3.0-libgcc' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/1hf92di50fsyqxcgsfi3z48hc05rm1a9-xgcc-13.3.0-libgcc' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/vcwb5qr1yjn3pwbm9gnmvqmn1gwg9a1y-gnu-config-2024-01-01' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/h4xcr5vxpz2wj4igjwdw85vjcxicspbx-linux-headers-6.10' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.16 copying path '/nix/store/7hpmrpicmvqgpnnj9i6470y1s7dh336z-libunistring-1.2' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.19 copying path '/nix/store/7hsml574k621n842nwnl8qhix3i2q6mv-update-autotools-gnu-config-scripts-hook' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.31 copying path '/nix/store/bhd4nlz0993jcsmp7b4fpgjyc9knh1yx-gcc-wrapper-13.3.0-man' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.31 copying path '/nix/store/3wjcy2waiy7cr1v0kvi73aj6i90d878d-libidn2-2.3.7' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 33.47 copying path '/nix/store/3bvxjkkmwlymr0fssczhgi39c3aj1l7i-glibc-2.40-36' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.44 copying path '/nix/store/j2v823114cc2dqfvprlcx9h7i941kknh-attr-2.5.2' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/mm0pa3z7kk6jh1i9rkxqxjqmd8h1qpxf-bash-5.2p37' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/h9bcdwky1hznar341kl52g7hidcjxfdc-gdbm-1.24-lib' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/iyrpqn6ana7j804dzis338n74kzznmj0-gnumake-4.4.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/1cd3p3kjh9c209s7832z8i3b8qcqggca-gawk-5.3.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/6amvjdayglsifq4lb2lrj4q5gwf4dicd-bzip2-1.0.8' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/b1rvxspjrw0f3y5iz4pcygams0n9yas4-ed-1.20.2' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/zx2bmicmgjh0inkgffd7agxz47j4xxql-expand-response-params' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/cnmw0v80xbp4ldc79an5kb2p8a3ia6k5-expat-2.6.3' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/py23xbn1b57hzbzpsyyfkp1rv5mh5pwa-mpdecimal-4.0.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/fbir2hb0b8b9n9by2qkmr4sjscds5017-gmp-6.3.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/5571d6dklkwfcp1812dj4lxb0gl3w1yw-glibc-2.40-36-bin' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/0qiyy7llb8ldillvlvjz1pyawhs5cvpk-libffi-3.4.6' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/3nkb6rscay1w5ky9xziy7qnjl0i4dx25-libxcrypt-4.4.36' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/s94fwp43xhzkvw8l8nqslskib99yifzi-gcc-13.3.0-lib' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.45 copying path '/nix/store/13wxcn0j2wk911ahfkbvdq241rkprsv8-gnused-4.9' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.58 copying path '/nix/store/c7qx9iq6lqfjd4dxrdd6723l6rvzsj5s-ncurses-6.4.20221231' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.58 copying path '/nix/store/m8gwqmn8k3jm0gbcia358mz4y00lgmbc-openssl-3.3.2' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.58 copying path '/nix/store/3yv1shg4kg4ifkxzg2jgjsrrrd8s1w08-patch-2.7.6' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.59 copying path '/nix/store/0dglgnjm2s5qg4ar6m33lpclqig0kg2x-acl-2.3.2' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.59 copying path '/nix/store/0kxxaix9l5dbih90491mv96zajsac57q-bzip2-1.0.8-bin' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.59 copying path '/nix/store/svlfxp9ips8gphsjz7ah2lsnirm2fhql-pcre2-10.44' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.59 copying path '/nix/store/wp5xd6g6v3mafvdh2185v19diqqf0cm2-xz-5.6.3' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.61 copying path '/nix/store/ncjma3lhr1sf6mqaczl9mfhjmp6ix58w-zlib-1.3.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.61 copying path '/nix/store/1v4kdwh68m221n160qxy1dgw64mg5z30-isl-0.20' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.61 copying path '/nix/store/k9s1aafqr83v8v4qv28px2i457dx6ix9-mpfr-4.2.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.62 copying path '/nix/store/qfc6wq1wpxvkkjqa6xr5685ip97qc3sr-gzip-1.13' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.65 copying path '/nix/store/932dj5qwfzck90mnvqpd1f9hjqznaqdj-glibc-2.40-36-dev' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.74 copying path '/nix/store/cqyjb712c5q3axw9qjij05dnji2a7z48-gnutar-1.35' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.76 copying path '/nix/store/vkv9a83hknlnr7p2z8mwl16j5pb502gp-file-5.45' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.76 copying path '/nix/store/ywxfq90ijq9kys4g5wzyrg2f4in0iphd-binutils-2.43.1-lib' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.76 copying path '/nix/store/b4cqpglpjvkjhb8l4dh1ammpg8gk6h9p-sqlite-3.46.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.78 copying path '/nix/store/nysgss3ggh3dv7mz08n28h29lazxhyc1-gnugrep-3.11' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.78 copying path '/nix/store/g0ih6cb93dm4n18bah982gsmayah3amy-xz-5.6.3-bin' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.80 copying path '/nix/store/wjvrhcaf0qjh4j463sz0fdday7qx8ga8-libmpc-1.3.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.82 copying path '/nix/store/i2bs001zwvii9qbhk6mm291gqybpij87-gmp-with-cxx-6.3.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.82 copying path '/nix/store/r9gxdanbg938b9vimis7akyawkyb0yax-patchelf-0.15.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.94 copying path '/nix/store/v7dbfh5n7az2lcap0z1cv4jq0bikya8p-gcc-13.3.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.95 copying path '/nix/store/pbixrqd120nnw8a0ygfpm3mnwlr1mbj7-binutils-2.43.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 34.98 copying path '/nix/store/rf0rvd79mdhy427nv1wv9shkc9nglijz-readline-8.2p13' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.02 copying path '/nix/store/sf6y4arqcm100rnnl3dhpg732i774zp6-coreutils-9.5' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.13 copying path '/nix/store/901c80rlps5q05bnjk1sj4zaz5k736nc-python3-3.12.7' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.19 copying path '/nix/store/alq4bqllykgwrif112yqgrn9g001kn7b-diffutils-3.10' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.19 copying path '/nix/store/psjqqbj19n3fqssn38hgz4cv7b7a9alp-findutils-4.10.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.19 copying path '/nix/store/pg37w2gymgf5rdlp00c3jn7hw37bnmyc-perl-5.40.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.39 copying path '/nix/store/1m9h3isxr4jh67yjjx540qf3sxwxhy3y-stdenv-linux' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 35.55 building '/nix/store/w9wjpgsiwxjv9p6166ax2mns747lmv2c-libraries.drv'...
+2026-May-26 06:51:01.765253
+#8 35.64 building '/nix/store/g3lchy17nx4gv4bw71jnpiinxs47bg4s-bc8f8d1be58e8c8383e683a06e1e1e57893fff87-env.drv'...
+2026-May-26 06:51:01.765253
+#8 35.69 copying path '/nix/store/l13l2ipc1xn5npjrw511y0yfh4ghinmf-binutils-wrapper-2.43.1' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 42.51 copying path '/nix/store/hgw57m0jh2w10jsv8x86ng267pm5sla8-gcc-wrapper-13.3.0' from 'https://cache.nixos.org'...
+2026-May-26 06:51:01.765253
+#8 42.66 building '/nix/store/b0x1xin8h03k1qlv2w60817zvams9drr-bc8f8d1be58e8c8383e683a06e1e1e57893fff87-env.drv'...
+2026-May-26 06:51:01.765253
+#8 42.71 created 52 symlinks in user environment
+2026-May-26 06:51:01.765253
+#8 42.92 building '/nix/store/597b8mrrbg7f3frri5ldavirmsg2f3pl-user-environment.drv'...
+2026-May-26 06:51:01.765253
+#8 43.04 removing old generations of profile /nix/var/nix/profiles/per-user/root/channels
+2026-May-26 06:51:01.765253
+#8 43.04 removing old generations of profile /nix/var/nix/profiles/per-user/root/profile
+2026-May-26 06:51:01.765253
+#8 43.04 removing profile version 1
+2026-May-26 06:51:01.765253
+#8 43.04 removing old generations of profile /nix/var/nix/profiles/per-user/root/channels
+2026-May-26 06:51:01.765253
+#8 43.04 removing old generations of profile /nix/var/nix/profiles/per-user/root/profile
+2026-May-26 06:51:01.765253
+#8 43.04 finding garbage collector roots...
+2026-May-26 06:51:01.765253
+#8 43.04 removing stale link from '/nix/var/nix/gcroots/auto/lzjbmb2ry0z7lma2fvpqprb12921pnb5' to '/nix/var/nix/profiles/per-user/root/profile-1-link'
+2026-May-26 06:51:01.765253
+#8 43.04 deleting garbage...
+2026-May-26 06:51:01.765253
+#8 43.05 deleting '/nix/store/a9qf4wwhympzs35ncp80r185j6a21w07-user-environment'
+2026-May-26 06:51:01.765253
+#8 43.05 deleting '/nix/store/253kwn1730vnay87xkjgxa2v97w3y079-user-environment.drv'
+2026-May-26 06:51:01.765253
+#8 43.05 deleting '/nix/store/hn5mrh362n52x8wwab9s1v6bgn4n5c94-env-manifest.nix'
+2026-May-26 06:51:01.765253
+#8 43.06 deleting '/nix/store/1m9h3isxr4jh67yjjx540qf3sxwxhy3y-stdenv-linux'
+2026-May-26 06:51:01.765253
+#8 43.06 deleting '/nix/store/r9gxdanbg938b9vimis7akyawkyb0yax-patchelf-0.15.0'
+2026-May-26 06:51:01.765253
+#8 43.06 deleting '/nix/store/g0ih6cb93dm4n18bah982gsmayah3amy-xz-5.6.3-bin'
+2026-May-26 06:51:01.765253
+#8 43.06 deleting '/nix/store/psjqqbj19n3fqssn38hgz4cv7b7a9alp-findutils-4.10.0'
+2026-May-26 06:51:01.765253
+#8 43.06 deleting '/nix/store/pg37w2gymgf5rdlp00c3jn7hw37bnmyc-perl-5.40.0'
+2026-May-26 06:51:01.765253
+#8 43.08 deleting '/nix/store/yfvhrcz7h68gxk06hfgq78din42454ha-source'
+2026-May-26 06:51:01.765253
+#8 44.62 deleting '/nix/store/nzi7rdydpky7lxv6mlvgcdpvdasaxcmq-builder.pl'
+2026-May-26 06:51:01.765253
+#8 44.62 deleting '/nix/store/iyrpqn6ana7j804dzis338n74kzznmj0-gnumake-4.4.1'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/3yv1shg4kg4ifkxzg2jgjsrrrd8s1w08-patch-2.7.6'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/b1rvxspjrw0f3y5iz4pcygams0n9yas4-ed-1.20.2'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/alq4bqllykgwrif112yqgrn9g001kn7b-diffutils-3.10'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/13wxcn0j2wk911ahfkbvdq241rkprsv8-gnused-4.9'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/qfc6wq1wpxvkkjqa6xr5685ip97qc3sr-gzip-1.13'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/7hsml574k621n842nwnl8qhix3i2q6mv-update-autotools-gnu-config-scripts-hook'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/y0fjd2rszhr48f61350q7ym16c1naizn-libraries'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/0kxxaix9l5dbih90491mv96zajsac57q-bzip2-1.0.8-bin'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/vcwb5qr1yjn3pwbm9gnmvqmn1gwg9a1y-gnu-config-2024-01-01'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/1cd3p3kjh9c209s7832z8i3b8qcqggca-gawk-5.3.1'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/vkv9a83hknlnr7p2z8mwl16j5pb502gp-file-5.45'
+2026-May-26 06:51:01.765253
+#8 44.63 deleting '/nix/store/cqyjb712c5q3axw9qjij05dnji2a7z48-gnutar-1.35'
+2026-May-26 06:51:01.765253
+#8 44.64 deleting unused links...
+2026-May-26 06:51:01.765253
+#8 46.55 note: currently hard linking saves 3.98 MiB
+2026-May-26 06:51:01.765253
+#8 46.62 23 store paths deleted, 245.32 MiB freed
+2026-May-26 06:51:01.765253
+#8 DONE 47.2s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#9 [stage-0 5/9] RUN sudo apt-get update && sudo apt-get install -y --no-install-recommends curl wget
+2026-May-26 06:51:01.765253
+#9 0.318 Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+2026-May-26 06:51:01.765253
+#9 0.318 Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+2026-May-26 06:51:01.765253
+#9 0.403 Get:3 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [3671 kB]
+2026-May-26 06:51:01.765253
+#9 0.425 Get:4 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+2026-May-26 06:51:01.765253
+#9 0.491 Get:5 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [2074 kB]
+2026-May-26 06:51:01.765253
+#9 0.494 Get:6 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+2026-May-26 06:51:01.765253
+#9 0.522 Get:7 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [48.4 kB]
+2026-May-26 06:51:01.765253
+#9 0.522 Get:8 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1509 kB]
+2026-May-26 06:51:01.765253
+#9 0.543 Get:9 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+2026-May-26 06:51:01.765253
+#9 0.773 Get:10 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+2026-May-26 06:51:01.765253
+#9 0.773 Get:11 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+2026-May-26 06:51:01.765253
+#9 0.790 Get:12 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+2026-May-26 06:51:01.765253
+#9 0.797 Get:13 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [54.6 kB]
+2026-May-26 06:51:01.765253
+#9 0.802 Get:14 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2150 kB]
+2026-May-26 06:51:01.765253
+#9 0.824 Get:15 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [2457 kB]
+2026-May-26 06:51:01.765253
+#9 0.846 Get:16 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [3920 kB]
+2026-May-26 06:51:01.765253
+#9 0.886 Get:17 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [35.9 kB]
+2026-May-26 06:51:01.765253
+#9 0.888 Get:18 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
+2026-May-26 06:51:01.765253
+#9 0.892 Get:19 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [671 B]
+2026-May-26 06:51:01.765253
+#9 1.454 Fetched 38.2 MB in 1s (31.5 MB/s)
+2026-May-26 06:51:01.765253
+#9 1.454 Reading package lists...
+2026-May-26 06:51:01.765253
+#9 2.207 Reading package lists...
+2026-May-26 06:51:01.765253
+#9 2.925 Building dependency tree...
+2026-May-26 06:51:01.765253
+#9 3.124 Reading state information...
+2026-May-26 06:51:01.765253
+#9 3.339 The following additional packages will be installed:
+2026-May-26 06:51:01.765253
+#9 3.342   libcurl3t64-gnutls libcurl4t64
+2026-May-26 06:51:01.765253
+#9 3.373 The following NEW packages will be installed:
+2026-May-26 06:51:01.765253
+#9 3.373   wget
+2026-May-26 06:51:01.765253
+#9 3.374 The following packages will be upgraded:
+2026-May-26 06:51:01.765253
+#9 3.375   curl libcurl3t64-gnutls libcurl4t64
+2026-May-26 06:51:01.765253
+#9 3.430 3 upgraded, 1 newly installed, 0 to remove and 49 not upgraded.
+2026-May-26 06:51:01.765253
+#9 3.430 Need to get 1237 kB of archives.
+2026-May-26 06:51:01.765253
+#9 3.430 After this operation, 941 kB of additional disk space will be used.
+2026-May-26 06:51:01.765253
+#9 3.430 Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 wget amd64 1.21.4-1ubuntu4.1 [334 kB]
+2026-May-26 06:51:01.765253
+#9 3.493 Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 curl amd64 8.5.0-2ubuntu10.9 [227 kB]
+2026-May-26 06:51:01.765253
+#9 3.503 Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcurl4t64 amd64 8.5.0-2ubuntu10.9 [342 kB]
+2026-May-26 06:51:01.765253
+#9 3.514 Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcurl3t64-gnutls amd64 8.5.0-2ubuntu10.9 [334 kB]
+2026-May-26 06:51:01.765253
+#9 3.649 debconf: delaying package configuration, since apt-utils is not installed
+2026-May-26 06:51:01.765253
+#9 3.700 Fetched 1237 kB in 0s (9114 kB/s)
+2026-May-26 06:51:01.765253
+#9 3.747 Selecting previously unselected package wget.
+2026-May-26 06:51:01.765253
+#9 3.747 (Reading database ... 
+(Reading database ... 5%
+(Reading database ... 10%
+(Reading database ... 15%
+(Reading database ... 20%
+(Reading database ... 25%
+(Reading database ... 30%
+(Reading database ... 35%
+(Reading database ... 40%
+(Reading database ... 45%
+(Reading database ... 50%
+(Reading database ... 55%
+(Reading database ... 60%
+(Reading database ... 65%
+(Reading database ... 70%
+(Reading database ... 75%
+(Reading database ... 80%
+(Reading database ... 85%
+(Reading database ... 90%
+(Reading database ... 95%
+(Reading database ... 100%
+(Reading database ... 9511 files and directories currently installed.)
+2026-May-26 06:51:01.765253
+#9 3.778 Preparing to unpack .../wget_1.21.4-1ubuntu4.1_amd64.deb ...
+2026-May-26 06:51:01.765253
+#9 3.788 Unpacking wget (1.21.4-1ubuntu4.1) ...
+2026-May-26 06:51:01.765253
+#9 3.856 Preparing to unpack .../curl_8.5.0-2ubuntu10.9_amd64.deb ...
+2026-May-26 06:51:01.765253
+#9 3.893 Unpacking curl (8.5.0-2ubuntu10.9) over (8.5.0-2ubuntu10.6) ...
+2026-May-26 06:51:01.765253
+#9 4.008 Preparing to unpack .../libcurl4t64_8.5.0-2ubuntu10.9_amd64.deb ...
+2026-May-26 06:51:01.765253
+#9 4.059 Unpacking libcurl4t64:amd64 (8.5.0-2ubuntu10.9) over (8.5.0-2ubuntu10.6) ...
+2026-May-26 06:51:01.765253
+#9 4.172 Preparing to unpack .../libcurl3t64-gnutls_8.5.0-2ubuntu10.9_amd64.deb ...
+2026-May-26 06:51:01.765253
+#9 4.208 Unpacking libcurl3t64-gnutls:amd64 (8.5.0-2ubuntu10.9) over (8.5.0-2ubuntu10.6) ...
+2026-May-26 06:51:01.765253
+#9 4.315 Setting up wget (1.21.4-1ubuntu4.1) ...
+2026-May-26 06:51:01.765253
+#9 4.358 Setting up libcurl4t64:amd64 (8.5.0-2ubuntu10.9) ...
+2026-May-26 06:51:01.765253
+#9 4.392 Setting up libcurl3t64-gnutls:amd64 (8.5.0-2ubuntu10.9) ...
+2026-May-26 06:51:01.765253
+#9 4.424 Setting up curl (8.5.0-2ubuntu10.9) ...
+2026-May-26 06:51:01.765253
+#9 4.459 Processing triggers for libc-bin (2.39-0ubuntu8.4) ...
+2026-May-26 06:51:01.765253
+#9 DONE 4.9s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#10 [stage-0 6/9] COPY . /app/.
+2026-May-26 06:51:01.765253
+#10 DONE 0.1s
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+#11 [stage-0 7/9] RUN --mount=type=cache,id=mqkjm6zdraiwswk2sg8jw0z5-/root/cache/pip,target=/root/.cache/pip python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt
+2026-May-26 06:51:01.765253
+#11 2.494 Collecting nicegui==3.8.0 (from -r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 2.664   Downloading nicegui-3.8.0-py3-none-any.whl.metadata (11 kB)
+2026-May-26 06:51:01.765253
+#11 2.728 Collecting fastapi==0.111.0 (from -r requirements.txt (line 2))
+2026-May-26 06:51:01.765253
+#11 2.741   Downloading fastapi-0.111.0-py3-none-any.whl.metadata (25 kB)
+2026-May-26 06:51:01.765253
+#11 2.796 Collecting uvicorn==0.28.0 (from -r requirements.txt (line 3))
+2026-May-26 06:51:01.765253
+#11 2.809   Downloading uvicorn-0.28.0-py3-none-any.whl.metadata (6.3 kB)
+2026-May-26 06:51:01.765253
+#11 2.931 Collecting pydantic==2.12.5 (from -r requirements.txt (line 4))
+2026-May-26 06:51:01.765253
+#11 2.945   Downloading pydantic-2.12.5-py3-none-any.whl.metadata (90 kB)
+2026-May-26 06:51:01.765253
+#11 2.985 Collecting httpx==0.27.0 (from -r requirements.txt (line 5))
+2026-May-26 06:51:01.765253
+#11 3.000   Downloading httpx-0.27.0-py3-none-any.whl.metadata (7.2 kB)
+2026-May-26 06:51:01.765253
+#11 3.033 Collecting Pygments<3.0.0,>=2.15.1 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.046   Downloading pygments-2.20.0-py3-none-any.whl.metadata (2.5 kB)
+2026-May-26 06:51:01.765253
+#11 3.064 Collecting aiofiles>=23.1.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.080   Downloading aiofiles-25.1.0-py3-none-any.whl.metadata (6.3 kB)
+2026-May-26 06:51:01.765253
+#11 3.489 Collecting aiohttp>=3.13.3 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.503   Downloading aiohttp-3.13.5-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+2026-May-26 06:51:01.765253
+#11 3.526 Collecting certifi>=2024.7.4 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.539   Downloading certifi-2026.5.20-py3-none-any.whl.metadata (2.5 kB)
+2026-May-26 06:51:01.765253
+#11 3.564 Collecting docutils>=0.19.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.582   Downloading docutils-0.22.4-py3-none-any.whl.metadata (15 kB)
+2026-May-26 06:51:01.765253
+#11 3.615 Collecting h11>=0.16.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.631   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2026-May-26 06:51:01.765253
+#11 3.653 Collecting ifaddr>=0.2.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.667   Downloading ifaddr-0.2.0-py3-none-any.whl.metadata (4.9 kB)
+2026-May-26 06:51:01.765253
+#11 3.686 Collecting itsdangerous<3,>=2.1.2 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.700   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+2026-May-26 06:51:01.765253
+#11 3.725 Collecting jinja2<4,>=3.1.6 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.739   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2026-May-26 06:51:01.765253
+#11 3.762 Collecting markdown2!=2.4.11,>=2.4.7 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.775   Downloading markdown2-2.5.5-py3-none-any.whl.metadata (2.1 kB)
+2026-May-26 06:51:01.765253
+#11 3.984 Collecting orjson>=3.11.5 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 3.999   Downloading orjson-3.11.9-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
+2026-May-26 06:51:01.765253
+#11 4.659 Collecting pydantic-core>=2.35.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.674   Downloading pydantic_core-2.47.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.5 kB)
+2026-May-26 06:51:01.765253
+#11 4.709 Collecting python-engineio>=4.12.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.723   Downloading python_engineio-4.13.2-py3-none-any.whl.metadata (2.3 kB)
+2026-May-26 06:51:01.765253
+#11 4.746 Collecting python-multipart>=0.0.22 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.763   Downloading python_multipart-0.0.29-py3-none-any.whl.metadata (2.1 kB)
+2026-May-26 06:51:01.765253
+#11 4.790 Collecting python-socketio>=5.14.0 (from python-socketio[asyncio-client]>=5.14.0->nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.804   Downloading python_socketio-5.16.2-py3-none-any.whl.metadata (3.3 kB)
+2026-May-26 06:51:01.765253
+#11 4.840 Collecting starlette>=0.49.1 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.854   Downloading starlette-1.1.0-py3-none-any.whl.metadata (6.3 kB)
+2026-May-26 06:51:01.765253
+#11 4.878 Collecting typing-extensions>=4.0.0 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.891   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+2026-May-26 06:51:01.765253
+#11 4.969 Collecting watchfiles>=0.18.1 (from nicegui==3.8.0->-r requirements.txt (line 1))
+2026-May-26 06:51:01.765253
+#11 4.989   Downloading watchfiles-1.2.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2026-May-26 06:51:01.765253
+#11 4.997 INFO: pip is looking at multiple versions of fastapi to determine which version is compatible with other requirements. This could take a while.
+2026-May-26 06:51:01.765253
+#11 4.998 ERROR: Cannot install -r requirements.txt (line 1) and -r requirements.txt (line 2) because these package versions have conflicting dependencies.
+2026-May-26 06:51:01.765253
+#11 4.998
+2026-May-26 06:51:01.765253
+#11 4.998 The conflict is caused by:
+2026-May-26 06:51:01.765253
+#11 4.998     nicegui 3.8.0 depends on starlette>=0.49.1
+2026-May-26 06:51:01.765253
+#11 4.998     fastapi 0.111.0 depends on starlette<0.38.0 and >=0.37.2
+2026-May-26 06:51:01.765253
+#11 4.998
+2026-May-26 06:51:01.765253
+#11 4.998 To fix this you could try to:
+2026-May-26 06:51:01.765253
+#11 4.998 1. loosen the range of package versions you've specified
+2026-May-26 06:51:01.765253
+#11 4.998 2. remove package versions to allow pip to attempt to solve the dependency conflict
+2026-May-26 06:51:01.765253
+#11 4.998
+2026-May-26 06:51:01.765253
+#11 4.998 ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+2026-May-26 06:51:01.765253
+#11 ERROR: process "/bin/bash -ol pipefail -c python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt" did not complete successfully: exit code: 1
+2026-May-26 06:51:01.765253
+------
+2026-May-26 06:51:01.765253
+> [stage-0 7/9] RUN --mount=type=cache,id=mqkjm6zdraiwswk2sg8jw0z5-/root/cache/pip,target=/root/.cache/pip python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt:
+2026-May-26 06:51:01.765253
+4.998
+2026-May-26 06:51:01.765253
+4.998 The conflict is caused by:
+2026-May-26 06:51:01.765253
+4.998     nicegui 3.8.0 depends on starlette>=0.49.1
+2026-May-26 06:51:01.765253
+4.998     fastapi 0.111.0 depends on starlette<0.38.0 and >=0.37.2
+2026-May-26 06:51:01.765253
+4.998
+2026-May-26 06:51:01.765253
+4.998 To fix this you could try to:
+2026-May-26 06:51:01.765253
+4.998 1. loosen the range of package versions you've specified
+2026-May-26 06:51:01.765253
+4.998 2. remove package versions to allow pip to attempt to solve the dependency conflict
+2026-May-26 06:51:01.765253
+4.998
+2026-May-26 06:51:01.765253
+4.998 ERROR: ResolutionImpossible: for help visit https://pip.pypa.io/en/latest/topics/dependency-resolution/#dealing-with-dependency-conflicts
+2026-May-26 06:51:01.765253
+------
+2026-May-26 06:51:01.765253
+2026-May-26 06:51:01.765253
+3 warnings found (use docker --debug to expand):
+2026-May-26 06:51:01.765253
+- SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "GOOGLE_MAPS_API_KEY") (line 11)
+2026-May-26 06:51:01.765253
+- SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "GOOGLE_MAPS_API_KEY") (line 12)
+2026-May-26 06:51:01.765253
+- UndefinedVar: Usage of undefined variable '$NIXPACKS_PATH' (line 18)
+2026-May-26 06:51:01.765253
+Dockerfile:20
+2026-May-26 06:51:01.765253
+--------------------
+2026-May-26 06:51:01.765253
+18 |     ENV NIXPACKS_PATH=/opt/venv/bin:$NIXPACKS_PATH
+2026-May-26 06:51:01.765253
+19 |     COPY . /app/.
+2026-May-26 06:51:01.765253
+20 | >>> RUN --mount=type=cache,id=mqkjm6zdraiwswk2sg8jw0z5-/root/cache/pip,target=/root/.cache/pip python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt
+2026-May-26 06:51:01.765253
+21 |
+2026-May-26 06:51:01.765253
+22 |
+2026-May-26 06:51:01.765253
+--------------------
+2026-May-26 06:51:01.765253
+ERROR: failed to build: failed to solve: process "/bin/bash -ol pipefail -c python -m venv --copies /opt/venv && . /opt/venv/bin/activate && pip install -r requirements.txt" did not complete successfully: exit code: 1
+2026-May-26 06:51:01.765253
+exit status 1
+2026-May-26 06:51:02.029219
+========================================
+2026-May-26 06:51:02.042858
+Deployment failed. Removing the new version of your application.
+2026-May-26 06:51:02.392562
+Gracefully shutting down build container: y9mxwynsw3rygta0i2ck190t
+
+
+COOLIFY de canlÄ±ya aldÄ±m ama bu hatayÄ± verdi
+
+
+## Assistant - 2026-05-26 09:54:00
+
+**Sorun:** `nicegui 3.8.0` â†’ `starlette>=0.49.1` istiyor; `fastapi==0.111.0` â†’ `starlette<0.38` istiyor. Pip kurulumu bu yÃ¼zden patlÄ±yordu.
+
+**YapÄ±lanlar (GitHubâ€™a push edildi):**
+- `fastapi==0.136.3` (uyumlu)
+- `uvicorn[standard]==0.34.3`
+- `httpx==0.28.1`
+- `nixpacks.toml` â†’ baÅŸlangÄ±Ã§: `python main.py`
+
+**Coolifyâ€™de ortam deÄŸiÅŸkenleri (zorunlu):**
+
+| DeÄŸiÅŸken | DeÄŸer |
+|----------|--------|
+| `GOOGLE_MAPS_API_KEY` | Google Maps anahtarÄ±nÄ±z |
+| `STORAGE_SECRET` | Uzun rastgele bir metin |
+| `OPEN_BROWSER` | `0` |
+| `RELOAD` | `0` |
+| `PORT` | Coolify genelde otomatik verir |
+
+`LOCAL_DEV` **tanÄ±mlamayÄ±n** (sunucu `0.0.0.0` dinler).
+
+**Sonraki adÄ±m:** Coolifyâ€™de **Redeploy** yapÄ±n (commit `7caadd4`).
+
+HÃ¢lÃ¢ hata alÄ±rsanÄ±z yeni deployment logâ€™un son 30 satÄ±rÄ±nÄ± paylaÅŸÄ±n.
+
+
+## User - 2026-05-26 10:06:26
+
+bir tane mobil tarayÄ±cÄ± ekranÄ± geliÅŸtiriyoruz. ekrana neredeyse full harita olsun. yukarÄ±daki dÃ¼ÄŸmeler ya hiÃ§ olmasÄ±n. yada PatiRota ile aynÄ± satÄ±ra sÄ±ÄŸsÄ±n.
+
+saÄŸ panel aÃ§Ä±k olmasÄ±n. saÄŸdan Ã§ekilince gÃ¶rÃ¼nsÃ¼n ve daha ufak olsun
+
+ekrandaki herÅŸey mobil ekrana gÃ¶re response olsun
+
+
+## Assistant - 2026-05-26 10:14:52
+
+**Cihaz tespiti ve GitHub push tamamlandÄ±.**
+
+### NasÄ±l Ã§alÄ±ÅŸÄ±yor
+Sunucu, tarayÄ±cÄ±nÄ±n **User-Agent** bilgisine bakarak cihazÄ± belirliyor:
+- **Mobil** (iPhone, Android, iPad vb.) â†’ `patirota-device-mobile`
+- **PC** â†’ `patirota-device-desktop`
+
+Sayfa bu moda gÃ¶re oluÅŸturuluyor; mobilde liste Ã§ekmecesi ve kompakt Ã¼st ÅŸerit, masaÃ¼stÃ¼nde yan panel ve rol seÃ§ici aÃ§Ä±k kalÄ±yor.
+
+### Mobil
+- Tam ekran harita
+- Ãœst ÅŸerit: PatiRota + 3 ikon (konum, hukuk, liste)
+- SaÄŸ panel kapalÄ±; menÃ¼ veya saÄŸdan kaydÄ±rma ile aÃ§Ä±lÄ±r
+
+### MasaÃ¼stÃ¼
+- Harita + sabit yan panel (300px)
+- Alt baÅŸlÄ±k ve rol seÃ§ici gÃ¶rÃ¼nÃ¼r
+- Liste menÃ¼ ikonu yok
+
+**SÃ¼rÃ¼m:** `260526.0002`  
+**GitHub:** https://github.com/realperest/PATIROTA (commit `8cde65f`)
+
+Coolifyâ€™de **Redeploy** yapÄ±n. Telefondan ve PCâ€™den ayrÄ± ayrÄ± test edin.
+
+
+## User - 2026-05-26 10:15:58
+
+telefonda haritayÄ± kaydÄ±rmak iÃ§in 2 parmak gerekmesin diyebilir miyiz ?
+
+
+## Assistant - 2026-05-26 10:17:46
+
+**GitHubâ€™a gÃ¶nderildi.**
+
+- **Commit:** `Mobilde haritada tek parmakla kaydirma (gestureHandling greedy)`
+- **Hash:** `a2c40cf`
+- **Repo:** https://github.com/realperest/PATIROTA
+
+**SÃ¼rÃ¼m:** `260526.0003`
+
+Coolifyâ€™de **Redeploy** yapÄ±n, telefonda Ã¶nbelleÄŸi temizleyip deneyin.
+
+Bundan sonra kod deÄŸiÅŸikliÄŸi yaptÄ±ÄŸÄ±mÄ±z her iÅŸlemin sonunda **REPO** ile push edeceÄŸim; sizin ayrÄ±ca yazmanÄ±za gerek kalmaz.
+
+
+## User - 2026-05-26 10:20:43
+
+iki tane yol tarifi al dÃ¼ÄŸmesi olmasÄ±n. maps ile ayrÄ± navigasyonla ayrÄ± olmasÄ±n yani. ROTAYI OLUÅTUR olsun, tek buna tÄ±klayÄ±nca eÄŸer o cihazda google navigasyon kullanÄ±labilirse navigasyonla, deÄŸilse de google maps ile rota aÃ§Ä±lsÄ±n
+
+
+## Assistant - 2026-05-26 10:23:07
+
+YapÄ±lan deÄŸiÅŸiklikler:
+
+## Tek dÃ¼ÄŸme: ROTAYI OLUÅTUR
+Pin balonunda artÄ±k iki ayrÄ± link yok. Ã–zet ekranÄ±nda tek **ROTAYI OLUÅTUR** dÃ¼ÄŸmesi var; tÄ±klanÄ±nca rota aÃ§Ä±lÄ±yor.
+
+## AkÄ±llÄ± aÃ§Ä±lÄ±ÅŸ (`patirotaOpenRoute`)
+- **Android / iOS** ve geÃ§erli koordinat varsa Ã¶nce yerel Google navigasyon ÅŸemasÄ± denenir (`google.navigation:` / `comgooglemaps://`).
+- Uygulama aÃ§Ä±lÄ±rsa sayfa arka plana geÃ§er ve yedek zamanlayÄ±cÄ± iptal edilir.
+- Uygulama aÃ§Ä±lmazsa ~1,5 sn sonra **Google Maps web rota** URLâ€™si aÃ§Ä±lÄ±r (konum varsa origin dahil).
+- **MasaÃ¼stÃ¼** veya yerel navigasyon desteklenmeyen cihazlarda doÄŸrudan Google Maps yol tarifi yeni sekmede aÃ§Ä±lÄ±r.
+
+## DiÄŸer
+- Ä°kinci aÅŸama (Maps / Navigasyon iki linki) kaldÄ±rÄ±ldÄ±.
+- AynÄ± pine ikinci tÄ±klamada da doÄŸrudan rota aÃ§Ä±lÄ±r.
+- Ã–nbellek iÃ§in sÃ¼rÃ¼m: `260526.0004`
+
+CanlÄ±da gÃ¶rmek iÃ§in deploy sonrasÄ± sayfayÄ± yenileyin. GitHubâ€™a gÃ¶ndermek iÃ§in **REPO** yazmanÄ±z yeterli.
+
+
+## User - 2026-05-26 11:16:57
+
+repo
+
+
+## Assistant - 2026-05-26 11:17:32
+
+GitHubâ€™a gÃ¶nderildi.
+
+**Commit:** `17c8c49` â€” *Tek ROTAYI OLUSTUR dugmesi ve akilli Google navigasyon veya Maps acilisi*  
+**Dosyalar:** `main.py`, `static/app.js`  
+**Repo:** https://github.com/realperest/PATIROTA
+
+`.runtime/` ve `konusmalar/` dosyalarÄ± commit dÄ±ÅŸÄ± bÄ±rakÄ±ldÄ± (yerel kayÄ±tlar).
+
+Coolifyâ€™da otomatik deploy aÃ§Ä±ksa birkaÃ§ dakika iÃ§inde canlÄ±ya yansÄ±r; deÄŸilse manuel redeploy yapÄ±n. Mobil test iÃ§in Ã¶nbelleÄŸi temizleyerek veya gizli sekmede deneyin.
+

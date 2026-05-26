@@ -167,32 +167,32 @@ def init_db():
                 (v_id, name, lat, lon, addr, phone),
             )
             
-        # Hukuki Sablonlar
+        # Hukuki Sablonlar (Mevzuat Rehberi)
         sablolar = [
             (
                 1, 1,
                 '5199 Sayili Kanun Madde 21: Bir motorlu tasit carpan hayvana acil veteriner yardimi goturmekle veya ulastirmakla yukumludur.',
-                'ISTANBUL BELEDIYESI VETERINER ISLERI MUDURLUGUNE\n\nBasvuran: [Adiniz Soyadiniz]\nT.C. Kimlik No: [TC No]\nAdres: [Adresiniz]\nTelefon: [Telefonunuz]\n\nKonu: Yarali sokak hayvanina acil mudahale yapilmasi ve tedavi edilmesi talebi.\n\nAciklamalar:\n[Tarih] tarihinde, [Olay Yeri Adresi] mevkisinde trafik kazasi gecirmis ve yaralanmis bir sokak kopegi tespit ettim. 5199 Sayili Hayvanlari Koruma Kanunu Madde 21 geregince yarali hayvana en kisa surede acil tibbi mudahalede bulunulmasi, gerekli tedavilerinin yapilmasi ve rehabilitasyon surecinin baslatilmasi icin belediyeniz veteriner ekiplerinin ivedilikle adrese yonlendirilmesini arz ederim.\n\nImza:\n[Adiniz Soyadiniz]'
+                'Bir trafik kazası geçiren veya yaralı bir hayvan gördüğünüzde, en yakın belediye veteriner işleri müdürlüğünü veya 153 Beyaz Masa\'yı aramalısınız. 5199 Sayılı Kanun\'un 21. Maddesi uyarınca, eğer kazaya siz karıştıysanız veya tanık olduysanız, hayvana acil veteriner yardımı ulaştırmak yasal bir yükümlülüktür. Belediyelerin acil müdahale ekipleri (ambulanslar) bölgeye gelip gerekli tedaviyi sağlamakla görevlidir.'
             ),
             (
                 2, 2,
                 '5199 Sayili Kanun Madde 14/f: Gucten dusmus hayvanlarin tibbi tedavi disinda calistirilmasi ve eziyet edilmesi yasaktir. Belediyeler bu hayvanlarin bakimi ve tedavisiyle yukumludur.',
-                'ISTANBUL BELEDIYESI VETERINER ISLERI MUDURLUGUNE\n\nBasvuran: [Adiniz Soyadiniz]\nAdres: [Adresiniz]\nTelefon: [Telefonunuz]\n\nKonu: Hasta/Gucten dusmus sokak hayvaninin tedaviye alinmasi talebi.\n\nAciklamalar:\n[Olay Yeri Adresi] adresinde, gozle gorulur sekilde hasta, enfeksiyonlu ve kendi bakimini idame ettiremeyecek durumda bir sokak kopegi bulunmaktadir. 5199 Sayili Kanun kapsaminda belediyenizin sokak hayvanlarini rehabilite etme gorevi uyarinca, soz konusu hayvanin ekiplerce yerinden alinarak tedavi merkezine goturulmesini ve sagligina kavusturulmasini talep ederim.\n\nImza:\n[Adiniz Soyadiniz]'
+                'Sokakta hasta, enfeksiyonlu veya kendi başına yaşamını idame ettiremeyecek durumda güçten düşmüş bir hayvan bulunduğunda, yerel yönetime (ilçe veya büyükşehir belediyesine) bildirim yapılmalıdır. 5199 Sayılı Kanun Madde 14/f uyarınca, güçten düşmüş hayvanların bakımı ve tedavisi belediyelerin sorumluluğundadır. İhbarınız üzerine ekiplerin hayvanı alarak rehabilitasyon merkezinde tedaviye başlatması gerekmektedir.'
             ),
             (
                 3, 3,
                 '5199 Sayili Kanun Madde 4: Hicbir hayvan, kendi turune ozgu hayat sartlarindan uzaklastirilamaz. Ancak yavru ve annesiz hayvanlarin belediye bakimevlerinde koruma altina alinmasi esastir.',
-                'ISTANBUL BELEDIYESI VETERINER ISLERI MUDURLUGUNE\n\nBasvuran: [Adiniz Soyadiniz]\nAdres: [Adresiniz]\nTelefon: [Telefonunuz]\n\nKonu: Annesiz/Korumasiz yavru kopeklerin guvenli barinaga alinmasi talebi.\n\nAciklamalar:\n[Olay Yeri Adresi] adresinde, anneleri olmayan, cevre kosullari nedeniyle hayati tehlikesi bulunan henuz sutten kesilmemis yavru kopekler bulunmaktadir. Bu yavrularin donma, aclik veya arac altinda kalma risklerine karsi belediyeniz rehabilitasyon ve gecici bakimevi bunyesinde guvenli alana alinarak koruma altina alinmasini arz ederim.\n\nImza:\n[Adiniz Soyadiniz]'
+                'Annesiz, dış etkilere karşı savunmasız veya süt emme çağında olan yavru köpek/kediler için öncelikle annenin çevrede olup olmadığı bir süre gözlemlenmelidir. Anne yoksa ve hayati tehlike varsa (donma, ezilme vs.) belediyeye haber verilmelidir. 5199 Sayılı Kanun Madde 4 gereği hayvanların doğal ortamından koparılmaması esas olsa da, bakıma muhtaç yavruların koruma altına alınması yasal bir haktır.'
             ),
             (
                 4, 4,
                 '5199 Sayili Kanun Madde 14/a: Hayvanlara kasitli olarak kotu davranmak, acimasiz ve zalimce islem yapmak, dovmek, ac ve susuz birakmak yasaktir. Turk Ceza Kanunu kapsaminda hayvana siddet suctur.',
-                'CUMHURIYET BASSAVCILIGINA\n\nMusteri/Ihbar Eden: [Adiniz Soyadiniz]\nAdres: [Adresiniz]\nTelefon: [Telefonunuz]\n\nSupheli: [Suphelinin Adi veya Tespit Edilemediyse Faili Mechul]\n\nKonu: Hayvana iskence ve kotu muamele sucu (5199 s. K. Madde 14 ve TCK ilgili hukumleri) hakkinda kamu davasi acilmasi talebi.\n\nAciklamalar:\n[Tarih] gunu saat [Saat] sularinda [Olay Yeri Adresi] adresinde supheli sahsin bir sokak kopegine kasitli olarak siddet uyguladigini, darp ettigini ve iskence yaptigini tespit ettim (Varsa deliller/sahitler eklenmelidir). 5199 Sayili Hayvanlari Koruma Kanununun guncel hukumleri uyarinca hayvana iskence ve eziyet etmek adli suc niteligindedir. Supheli hakkinda gerekli sorusturmanin yapilarak cezalandirilmasi icin kamu davasi acilmasini talep ederim.\n\nDeliller: [Varsa Video, Fotograf, Taniklar]\n\nImza:\n[Adiniz Soyadiniz]'
+                'Bir hayvanın kasıtlı olarak şiddet, işkence veya kötü muameleye maruz kaldığına şahit olursanız, durumu derhal 112 Acil Çağrı Merkezi üzerinden emniyet güçlerine (HAYDİ Polis/Jandarma) bildirin. 5199 Sayılı Kanun ve Türk Ceza Kanunu kapsamında hayvana eziyet etmek hapis cezası gerektiren adli bir suçtur. Mümkünse can güvenliğinizi riske atmadan fotoğraf veya video kaydı alarak delillerle birlikte şikayetçi olun.'
             ),
             (
                 5, 5,
                 '5199 Sayili Kanun Madde 6: Sahipsiz veya gucten dusmus hayvanlarin en hizli sekilde yerel yonetimlerce kurulan gecici bakimevlerine goturulmesi zorunludur. Rehabilite edilen hayvanlarin oncelikle alindiklari ortama birakilmalari esastir.',
-                'ISTANBUL BELEDIYESI VETERINER ISLERI MUDURLUGUNE\n\nBasvuran: [Adiniz Soyadiniz]\nAdres: [Adresiniz]\nTelefon: [Telefonunuz]\n\nKonu: Sahipsiz sokak hayvaninin asilanmasi ve kisirlastirilmasi talebi.\n\nAciklamalar:\n[Olay Yeri Adresi] adresinde bulunan kupesiz ve sahipsiz sokak kopeginin, 5199 Sayili Kanun Madde 6 uyarinca asilanmasi, kisirlastirilmasi ve gerekli saglik kontrollerinin yapilmasi amaciyla belediyeniz ekiplerce gecici bakimevine goturulmesini, islemler tamamlandiktan sonra ise yasa geregi alindigi adrese geri birakilmasini arz ederim.\n\nImza:\n[Adiniz Soyadiniz]'
+                'Mahallenizde sahipsiz, küpesiz (kısırlaştırılmamış) ancak sağlıklı bir sokak hayvanı varsa, kontrolsüz üremenin ve olası sorunların önüne geçilmesi için belediyeye haber verilmelidir. 5199 Sayılı Kanun Madde 6 uyarınca belediyeler; sahipsiz hayvanları geçici bakımevine almak, aşılamak, kısırlaştırmak ve küpe ile işaretlemekle yükümlüdür. İşlemleri biten hayvan kanun gereği alındığı ortama geri bırakılmalıdır.'
             )
         ]
         for s_id, status_id, ref, text in sablolar:
